@@ -94,6 +94,13 @@
     font-size:13px;letter-spacing:.08em;font-weight:600;
     box-shadow:0 2px 6px rgba(43,38,16,.08);
   }
+  .hero-photo{
+    max-width:760px;margin:0 auto 42px;
+    border-radius:16px;overflow:hidden;
+    border:6px solid var(--white);
+    box-shadow:0 18px 44px rgba(43,38,16,.28);
+  }
+  .hero-photo img{width:100%;display:block;}
   .hero-price{
     display:inline-flex;align-items:baseline;gap:8px;
     background:var(--ink);color:var(--yellow);
@@ -146,7 +153,28 @@
 
   /* ===== gallery ===== */
   .gallery-grid{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;
+    display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:225px;gap:14px;
+  }
+  .gallery-grid figure{
+    position:relative;border-radius:12px;overflow:hidden;
+    box-shadow:0 6px 18px rgba(43,38,16,.10);
+  }
+  .gallery-grid figure img{width:100%;height:100%;object-fit:cover;}
+  .gallery-grid figcaption{
+    position:absolute;left:0;right:0;bottom:0;
+    padding:28px 14px 10px;
+    background:linear-gradient(transparent,rgba(43,38,16,.75));
+    color:#fff;font-size:12.5px;letter-spacing:.1em;
+  }
+  .g-ldk{grid-column:span 2;grid-row:span 2;}
+  .g-bath{grid-row:span 2;}
+  .g-room{grid-column:span 2;}
+  @media(max-width:760px){
+    .gallery-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px;}
+    .g-ldk{grid-column:span 2;grid-row:span 2;}
+    .g-bath{grid-column:span 1;grid-row:span 2;}
+    .g-wic{grid-row:span 2;}
+    .g-room{grid-column:span 2;grid-row:span 2;}
   }
   .ph{
     aspect-ratio:4/3;
@@ -165,6 +193,11 @@
     display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
   }
   .madori-flex .ph{aspect-ratio:1/1;}
+  .madori-fig{
+    background:var(--white);border:1px solid var(--line);border-radius:12px;
+    padding:24px;display:flex;align-items:center;justify-content:center;
+  }
+  .madori-fig img{width:100%;max-width:320px;height:auto;}
   .madori-table{width:100%;border-collapse:collapse;}
   .madori-table th,.madori-table td{
     padding:13px 10px;border-bottom:1px solid var(--line);
@@ -299,6 +332,9 @@
       <li>即入居OK</li>
       <li>セルフ内見対応</li>
     </ul>
+    <div class="hero-photo">
+      <img src="images/exterior.jpg" alt="リバーサイドスワ 外観" width="1445" height="1088">
+    </div>
     <div class="hero-price">
       <span class="label">賃料</span>
       <span class="num">6.1</span>
@@ -346,14 +382,12 @@
       <h2>お部屋を見る</h2>
     </div>
     <div class="gallery-grid">
-      <div class="ph">外観（写真準備中）</div>
-      <div class="ph">リビング（写真準備中）</div>
-      <div class="ph">キッチン（写真準備中）</div>
-      <div class="ph">浴室（写真準備中）</div>
-      <div class="ph">洋室（写真準備中）</div>
-      <div class="ph">収納・WIC（写真準備中）</div>
+      <figure class="g-ldk"><img src="images/ldk.jpg" alt="LDK15畳 南向きで日当たり良好" loading="lazy"><figcaption>LDK15畳｜南向きバルコニーからの光</figcaption></figure>
+      <figure class="g-bath"><img src="images/bath.jpg" alt="窓付き浴室 追い焚き機能付き" loading="lazy"><figcaption>浴室｜追い焚き＆窓付き</figcaption></figure>
+      <figure class="g-room"><img src="images/room.jpg" alt="洋室 2面採光" loading="lazy"><figcaption>洋室｜2面採光で明るい</figcaption></figure>
+      <figure class="g-wic"><img src="images/wic.jpg" alt="ウォークインクローゼット" loading="lazy"><figcaption>ウォークインクローゼット</figcaption></figure>
     </div>
-    <p class="gallery-note">※写真は現在準備中です。「かってに内見」なら、実際のお部屋をご自身の目でゆっくり確かめられます。</p>
+    <p class="gallery-note">気になるところは「かってに内見」で、ご自身の目でゆっくり確かめられます。</p>
   </div>
 </section>
 
@@ -364,7 +398,9 @@
       <h2>間取り・住まいの基本情報</h2>
     </div>
     <div class="madori-flex">
-      <div class="ph">間取り図（準備中）</div>
+      <div class="madori-fig">
+        <img src="images/madori.png" alt="間取り図 2LDK（LDK15畳・洋室6畳・洋室6.5畳・WIC）">
+      </div>
       <table class="madori-table">
         <tr><th>間取り</th><td>2LDK（LDK15畳・洋室6畳・洋室6.5畳）</td></tr>
         <tr><th>専有面積</th><td>64.17㎡（19.41坪）</td></tr>
