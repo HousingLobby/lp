@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ベルデタウン 102号室｜大村市松原本町の1LDK賃貸アパート｜ハウジングロビーL&P</title>
+<meta name="description" content="長崎県大村市松原本町、JR「松原」駅徒歩3分のオール電化1LDK。フリーレント特典・浴室乾燥・カウンターキッチン。賃料49,000円。かってに内見(セルフ内見)対応。">
+<style>
+  :root{
+    --navy:#104b84;
+    --ink:#1a1a1a;
+    --sub:#767676;
+    --faint:#9a9a9a;
+    --line:#e8e8e8;
+    --bg:#ffffff;
+    --bg-soft:#fafafa;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic Medium","Yu Gothic",sans-serif;
+    font-weight:300;
+    color:var(--ink);
+    background:var(--bg);
+    line-height:2;
+    letter-spacing:.08em;
+    font-size:14px;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px;}
+
+  /* ===== header ===== */
+  header{
+    position:sticky;top:0;z-index:100;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    max-width:1040px;margin:0 auto;padding:14px 24px;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+  }
+  .brand{font-size:10px;letter-spacing:.22em;color:var(--faint);text-transform:uppercase;}
+  .brand strong{display:block;font-size:13px;font-weight:500;color:var(--ink);letter-spacing:.14em;}
+  .header-cta{
+    display:inline-block;
+    background:var(--navy);color:#fff;
+    text-decoration:none;font-weight:400;font-size:11px;letter-spacing:.18em;
+    padding:11px 26px;
+    white-space:nowrap;
+    transition:opacity .2s ease;
+  }
+  .header-cta:hover{opacity:.82;}
+
+  /* ===== hero ===== */
+  .hero{border-bottom:1px solid var(--line);}
+  .hero-photo{
+    width:100%;
+    aspect-ratio:21/9;
+    max-height:52vh;
+    overflow:hidden;
+  }
+  .hero-photo img{width:100%;height:100%;object-fit:cover;}
+  .hero-body{
+    max-width:1040px;margin:0 auto;
+    padding:56px 24px 64px;
+    display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;
+  }
+  .hero-eyebrow{
+    font-size:10px;letter-spacing:.38em;color:var(--navy);
+    text-transform:uppercase;margin-bottom:22px;font-weight:400;
+  }
+  .hero h1{
+    font-size:clamp(24px,3.6vw,38px);
+    font-weight:300;letter-spacing:.14em;line-height:1.7;margin-bottom:18px;
+  }
+  .hero-addr{font-size:12px;color:var(--sub);letter-spacing:.16em;margin-bottom:26px;}
+  .hero-tags{display:flex;flex-wrap:wrap;gap:8px 20px;padding:0;list-style:none;}
+  .hero-tags li{
+    font-size:11.5px;letter-spacing:.12em;color:var(--sub);
+    display:flex;align-items:center;gap:8px;
+  }
+  .hero-tags li::before{content:"";width:4px;height:4px;background:var(--navy);flex:none;}
+  .hero-price{border-left:1px solid var(--line);padding-left:40px;}
+  .hero-price .label{
+    display:block;font-size:10px;letter-spacing:.32em;color:var(--faint);
+    text-transform:uppercase;margin-bottom:8px;
+  }
+  .hero-price .num{
+    font-size:56px;font-weight:200;line-height:1;letter-spacing:.02em;color:var(--navy);
+  }
+  .hero-price .unit{font-size:16px;font-weight:300;letter-spacing:.1em;margin-left:4px;}
+  .hero-price .extra{display:block;font-size:11px;color:var(--sub);margin-top:12px;letter-spacing:.1em;}
+
+  /* ===== section base ===== */
+  section{padding:96px 0;}
+  .sec-head{margin-bottom:56px;}
+  .sec-head .en{
+    display:block;font-size:10px;letter-spacing:.4em;color:var(--navy);
+    text-transform:uppercase;margin-bottom:14px;font-weight:400;
+  }
+  .sec-head h2{
+    font-size:clamp(18px,2.6vw,24px);letter-spacing:.18em;font-weight:300;
+  }
+  .sec-head h2::after{
+    content:"";display:block;width:32px;height:1px;background:var(--navy);margin-top:20px;
+  }
+
+  /* ===== points ===== */
+  .point-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);
+  }
+  .point-card{background:var(--bg);padding:44px 40px;}
+  .point-card .no{
+    font-size:11px;letter-spacing:.3em;color:var(--navy);margin-bottom:16px;display:block;
+  }
+  .point-card h3{font-size:15px;font-weight:500;letter-spacing:.14em;margin-bottom:12px;}
+  .point-card p{font-size:12.5px;color:var(--sub);letter-spacing:.08em;}
+
+  /* ===== gallery ===== */
+  .gallery{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .gallery-grid{
+    display:grid;grid-template-columns:repeat(6,1fr);gap:20px;
+  }
+  .gallery-grid figure{margin:0;}
+  .g-frame{overflow:hidden;background:#eee;}
+  .g-ldk .g-frame,.g-room .g-frame{aspect-ratio:4/3;}
+  .g-bath .g-frame,.g-wic .g-frame{aspect-ratio:3/4;}
+  .gallery-grid img{width:100%;height:100%;object-fit:cover;}
+  .g-ldk{grid-column:span 4;}
+  .g-bath{grid-column:span 2;}
+  .g-wic{grid-column:span 2;}
+  .g-room{grid-column:span 4;}
+  .gallery-grid figcaption{
+    font-size:11px;letter-spacing:.16em;color:var(--sub);
+    padding-top:12px;
+  }
+  .gallery-grid figcaption::before{content:"— ";color:var(--navy);}
+  .gallery-note{font-size:11.5px;color:var(--faint);margin-top:40px;letter-spacing:.12em;}
+
+  /* ===== madori ===== */
+  .madori-flex{
+    display:grid;grid-template-columns:380px 1fr;gap:64px;align-items:start;
+  }
+  .madori-fig{
+    border:1px solid var(--line);
+    padding:40px;display:flex;align-items:center;justify-content:center;
+    background:var(--bg);
+  }
+  .madori-fig img{width:100%;max-width:300px;height:auto;}
+  .dl-table{width:100%;border-collapse:collapse;}
+  .dl-table th,.dl-table td{
+    padding:16px 8px;border-bottom:1px solid var(--line);
+    font-size:13px;text-align:left;vertical-align:top;font-weight:300;
+    letter-spacing:.08em;
+  }
+  .dl-table th{width:32%;color:var(--faint);font-size:11px;letter-spacing:.2em;white-space:nowrap;padding-right:24px;}
+  .dl-table tr:first-child th,.dl-table tr:first-child td{padding-top:0;}
+
+  /* ===== equipment ===== */
+  .equip{padding-top:0;}
+  .equip-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:0 40px;
+    border-top:1px solid var(--line);
+  }
+  .equip-grid span{
+    font-size:12.5px;letter-spacing:.1em;color:var(--sub);
+    padding:14px 0;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:10px;
+  }
+  .equip-grid span::before{content:"";width:4px;height:4px;background:var(--line);flex:none;background:#c9c9c9;}
+  .equip-grid span.hot{color:var(--ink);font-weight:500;}
+  .equip-grid span.hot::before{background:var(--navy);}
+
+  /* ===== cost ===== */
+  .cost{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .cost-flex{display:grid;grid-template-columns:1fr 1fr;gap:80px;}
+  .cost-box h3{
+    font-size:12px;font-weight:500;letter-spacing:.26em;color:var(--navy);
+    margin-bottom:24px;text-transform:uppercase;
+  }
+  .cost-table{width:100%;border-collapse:collapse;}
+  .cost-table th,.cost-table td{
+    padding:14px 4px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;
+    font-weight:300;letter-spacing:.08em;
+  }
+  .cost-table th{width:56%;color:var(--sub);font-weight:300;}
+  .cost-table td{text-align:right;font-weight:400;font-feature-settings:"tnum";}
+  .cost-note{font-size:11px;color:var(--faint);margin-top:20px;letter-spacing:.08em;line-height:1.9;}
+
+  /* ===== area ===== */
+  .area-note{font-size:13px;color:var(--sub);letter-spacing:.08em;line-height:2.1;}
+
+  /* ===== overview ===== */
+  .overview{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .ov-table{width:100%;border-collapse:collapse;}
+  .ov-table th,.ov-table td{
+    padding:15px 8px;border-bottom:1px solid var(--line);
+    font-size:13px;text-align:left;vertical-align:top;font-weight:300;letter-spacing:.08em;
+  }
+  .ov-table th{width:20%;color:var(--faint);font-size:11px;letter-spacing:.2em;white-space:nowrap;font-weight:300;}
+  @media(max-width:640px){
+    .ov-table th{width:32%;white-space:normal;}
+  }
+
+  /* ===== cta ===== */
+  .cta{
+    background:var(--navy);color:#fff;text-align:center;
+    padding:110px 0;
+  }
+  .cta .en{
+    display:block;font-size:10px;letter-spacing:.4em;color:rgba(255,255,255,.6);
+    text-transform:uppercase;margin-bottom:18px;
+  }
+  .cta h2{
+    font-size:clamp(20px,3vw,28px);letter-spacing:.18em;font-weight:300;margin-bottom:20px;
+  }
+  .cta p.lead{font-size:13px;letter-spacing:.12em;margin-bottom:40px;color:rgba(255,255,255,.85);}
+  .cta-features{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:10px 36px;
+    margin-bottom:48px;padding:0;list-style:none;
+  }
+  .cta-features li{
+    font-size:11.5px;letter-spacing:.16em;color:rgba(255,255,255,.85);
+    display:flex;align-items:center;gap:8px;
+  }
+  .cta-features li::before{content:"";width:4px;height:4px;background:rgba(255,255,255,.6);flex:none;}
+  .cta-btn{
+    display:inline-block;
+    background:#fff;color:var(--navy);
+    text-decoration:none;
+    font-size:15px;font-weight:400;letter-spacing:.2em;
+    padding:22px 72px;
+    transition:opacity .2s ease;
+  }
+  .cta-btn:hover{opacity:.88;}
+  .cta-btn small{display:block;font-size:9px;font-weight:400;letter-spacing:.34em;margin-bottom:6px;color:var(--faint);}
+  .cta-sub{margin-top:44px;font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,.75);}
+  .cta-sub a{color:#fff;font-weight:400;text-decoration:none;font-size:16px;letter-spacing:.14em;}
+
+  footer{
+    background:var(--bg);color:var(--faint);
+    text-align:center;padding:32px 24px;font-size:11px;letter-spacing:.12em;
+  }
+
+  @media(max-width:760px){
+    section{padding:64px 0;}
+    .hero-photo{aspect-ratio:16/10;max-height:none;}
+    .hero-body{grid-template-columns:1fr;gap:32px;padding:40px 24px 48px;}
+    .hero-price{border-left:none;border-top:1px solid var(--line);padding-left:0;padding-top:28px;}
+    .hero-price .num{font-size:46px;}
+    .point-grid{grid-template-columns:1fr;}
+    .point-card{padding:32px 24px;}
+    .gallery-grid{grid-template-columns:repeat(2,1fr);gap:14px;}
+    .g-ldk,.g-room{grid-column:span 2;}
+    .g-bath,.g-wic{grid-column:span 1;}
+    .madori-flex{grid-template-columns:1fr;gap:40px;}
+    .madori-fig{padding:28px;}
+    .cost-flex{grid-template-columns:1fr;gap:56px;}
+    .cta{padding:80px 0;}
+    .cta-btn{padding:20px 44px;letter-spacing:.14em;}
+    .header-cta{font-size:10px;padding:9px 16px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">Omura, Nagasaki — 1LDK<strong>ベルデタウン 102</strong></div>
+    <a class="header-cta" href="https://katteni-naiken.jp/" target="_blank" rel="noopener">かってに内見する</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-photo">
+    <img src="images/exterior.jpg" alt="ベルデタウン 外観" width="1477" height="1108">
+  </div>
+  <div class="hero-body">
+    <div>
+      <p class="hero-eyebrow">Verde Town — Room 102</p>
+      <h1>駅徒歩3分、フリーレント付きの<br>快適オール電化1LDK。</h1>
+      <p class="hero-addr">ベルデタウン 102号室（1階部分）｜長崎県大村市松原本町</p>
+      <ul class="hero-tags">
+        <li>JR「松原」駅 徒歩3分</li>
+        <li>1LDK / 34.53㎡</li>
+        <li>駐車場1台込み</li>
+        <li>即入居OK</li>
+        <li>セルフ内見対応</li>
+      </ul>
+    </div>
+    <div class="hero-price">
+      <span class="label">Rent</span>
+      <span class="num">4.9</span><span class="unit">万円</span>
+      <span class="extra">共益費・管理費なし</span>
+    </div>
+  </div>
+</div>
+
+<section class="points">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="en">Feature</span>
+      <h2>この部屋が選ばれる、4つの理由</h2>
+    </div>
+    <div class="point-grid">
+      <div class="point-card">
+        <span class="no">01</span>
+        <h3>JR「松原」駅 徒歩3分</h3>
+        <p>JR大村線「松原」駅まで徒歩3分の好立地。通勤・通学のアクセスも良好です。</p>
+      </div>
+      <div class="point-card">
+        <span class="no">02</span>
+        <h3>フリーレント特典付き</h3>
+        <p>ハイムズクラブ契約開始日から次月までフリーレント。人気のオール電化1LDKをお得にスタート。</p>
+      </div>
+      <div class="point-card">
+        <span class="no">03</span>
+        <h3>浴室乾燥・カウンターキッチン</h3>
+        <p>追い焚き機能・浴室乾燥機・カウンターキッチンなど、設備も充実しています。</p>
+      </div>
+      <div class="point-card">
+        <span class="no">04</span>
+        <h3>単身も二人入居も対応</h3>
+        <p>家族可・単身者可・二人入居可。インターネット無料で暮らしの初期費用も抑えられます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gallery">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="en">Gallery</span>
+      <h2>お部屋を見る</h2>
+    </div>
+    <div class="gallery-grid">
+      <figure class="g-ldk"><div class="g-frame"><img src="images/ldk.jpg" alt="カウンターキッチン IHクッキングヒーター" loading="lazy"></div><figcaption>キッチン｜IH・3口コンロのシステムキッチン</figcaption></figure>
+      <figure class="g-bath"><div class="g-frame"><img src="images/bath.jpg" alt="浴室 追い焚き機能・浴室乾燥機付き" loading="lazy"></div><figcaption>浴室｜追い焚き＆浴室乾燥機付き</figcaption></figure>
+      <figure class="g-wic"><div class="g-frame"><img src="images/wic.jpg" alt="クローゼット 全居室収納" loading="lazy"></div><figcaption>収納｜全居室クローゼット付き</figcaption></figure>
+      <figure class="g-room"><div class="g-frame"><img src="images/room.jpg" alt="洋室 全室フローリング" loading="lazy"></div><figcaption>洋室3.6帖｜全室フローリングで明るい</figcaption></figure>
+    </div>
+    <p class="gallery-note">気になるところは「かってに内見」で、ご自身の目でゆっくり確かめられます。</p>
+  </div>
+</section>
+
+<section class="madori">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="en">Floor Plan</span>
+      <h2>間取り・住まいの基本情報</h2>
+    </div>
+    <div class="madori-flex">
+      <div class="madori-fig">
+        <img src="images/madori.jpg" alt="間取り図 1LDK（洋室3.6帖・LDK10.9帖）" width="720" height="720">
+      </div>
+      <table class="dl-table">
+        <tr><th>間取り</th><td>1LDK（洋室3.6帖／LDK10.9帖）</td></tr>
+        <tr><th>専有面積</th><td>34.53㎡</td></tr>
+        <tr><th>号室 / 位置</th><td>102号室（1階部分）</td></tr>
+        <tr><th>構造</th><td>軽量鉄骨造・地上2階建・総戸数3戸</td></tr>
+        <tr><th>築年月</th><td>2017年4月</td></tr>
+        <tr><th>入居可能時期</th><td>即入居可（空室）</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="equip">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="en">Equipment</span>
+      <h2>設備・仕様</h2>
+    </div>
+    <div class="equip-grid">
+      <span class="hot">オール電化</span>
+      <span class="hot">追い焚き機能付バス</span>
+      <span class="hot">浴室乾燥機</span>
+      <span class="hot">カウンターキッチン</span>
+      <span>IHクッキングヒーター（3口）</span>
+      <span>システムキッチン</span>
+      <span>バス・トイレ別</span>
+      <span>温水洗浄便座</span>
+      <span>洗面化粧台（独立洗面所）</span>
+      <span>エアコン</span>
+      <span>室内洗濯機置き場</span>
+      <span>TVモニター付インターホン</span>
+      <span>クローゼット・全居室収納</span>
+      <span>シューズボックス</span>
+      <span>インターネット対応（使用料不要）</span>
+      <span>駐車場（平置き・屋外）</span>
+      <span>全室フローリング・全居室洋室</span>
+      <span>IT重説対応物件</span>
+    </div>
+  </div>
+</section>
+
+<section class="cost">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="en">Cost</span>
+      <h2>ご入居にかかる費用</h2>
+    </div>
+    <div class="cost-flex">
+      <div class="cost-box">
+        <h3>毎月のお支払い</h3>
+        <table class="cost-table">
+          <tr><th>賃料</th><td>49,000円</td></tr>
+          <tr><th>共益費・管理費</th><td>—</td></tr>
+          <tr><th>サポート24（月額）</th><td>1,100円</td></tr>
+          <tr><th>ユニディア月額保証料</th><td>604円</td></tr>
+        </table>
+      </div>
+      <div class="cost-box">
+        <h3>契約時・更新時の費用</h3>
+        <table class="cost-table">
+          <tr><th>敷金 / 礼金</th><td>— / —</td></tr>
+          <tr><th>仲介手数料</th><td>53,900円</td></tr>
+          <tr><th>保証会社 初回保証料</th><td>月額賃料の50%</td></tr>
+          <tr><th>火災保険料</th><td>15,000円（2年契約）</td></tr>
+          <tr><th>鍵代</th><td>18,700円</td></tr>
+          <tr><th>更新料（24ヶ月毎）</th><td>30,000円（新賃料）</td></tr>
+        </table>
+        <p class="cost-note">※保証会社：セキスイユニディア株式会社（加入要）。月額賃料等の1.2%が別途かかります。※短期解約違約金あり（1年未満解約時：賃料1か月分）。※駐車場セット契約のため単独解約不可。詳細はお問い合わせください。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="area">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="en">Location</span>
+      <h2>暮らしやすさが揃う、松原本町</h2>
+    </div>
+    <p class="area-note">JR大村線「松原」駅から徒歩3分。大村市役所松原出張所や商店が並ぶ松原本町エリアで、日々の買い物や通勤・通学に便利な立地です。</p>
+  </div>
+</section>
+
+<section class="overview">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="en">Overview</span>
+      <h2>物件概要</h2>
+    </div>
+    <table class="ov-table">
+      <tr><th>物件名</th><td>ベルデタウン 102号室（1階部分）</td></tr>
+      <tr><th>所在地</th><td>〒856-0009 長崎県大村市松原本町273-3</td></tr>
+      <tr><th>交通</th><td>JR大村線「松原」駅 徒歩3分</td></tr>
+      <tr><th>物件種別</th><td>アパート（賃貸）</td></tr>
+      <tr><th>間取り / 面積</th><td>1LDK（洋室3.6帖／LDK10.9帖）／34.53㎡</td></tr>
+      <tr><th>構造 / 階建</th><td>軽量鉄骨造／地上2階建・総戸数3戸（102号室は1階部分）</td></tr>
+      <tr><th>築年月</th><td>2017年4月</td></tr>
+      <tr><th>駐車場</th><td>駐車場有り／空き1台（P1・単独解約不可）</td></tr>
+      <tr><th>ガス / 水道</th><td>オール電化／公営水道・公共下水</td></tr>
+      <tr><th>契約期間</th><td>普通建物賃貸借契約 24ヶ月</td></tr>
+      <tr><th>保証会社</th><td>セキスイユニディア株式会社（加入要）初回保証料：月額賃料50%</td></tr>
+      <tr><th>現況 / 入居</th><td>空室／即入居可</td></tr>
+      <tr><th>取扱店</th><td>株式会社ハウジングロビーL&P（長崎県長崎市下西山町1-5）</td></tr>
+      <tr><th>情報更新日</th><td>2026年7月21日</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <span class="en">Self Viewing</span>
+    <h2>お店に行かずに、ひとりで内見。</h2>
+    <p class="lead">スマホ時代の新常識「かってに内見」。このお部屋も、あなたのペースでゆっくり見学できます。</p>
+    <ul class="cta-features">
+      <li>来店不要・ひとりでOK</li>
+      <li>最短7日で入居</li>
+      <li>ネット契約対応</li>
+      <li>タクシー無料送迎つき</li>
+    </ul>
+    <a class="cta-btn" href="https://katteni-naiken.jp/" target="_blank" rel="noopener">
+      <small>SELF-VIEWING SERVICE</small>
+      かってに内見で見に行く
+    </a>
+    <p class="cta-sub">
+      お電話でのご相談も歓迎です：<a href="tel:0958935056">095-893-5056</a><br>
+      株式会社ハウジングロビーL&P（担当：細田）
+    </p>
+  </div>
+</section>
+
+<footer>
+  © 2026 Housing Lobby L&P Co.,Ltd.｜掲載内容は2026年7月21日時点の情報です。最新の空室状況はお問い合わせください。
+</footer>
+
+</body>
+</html>
