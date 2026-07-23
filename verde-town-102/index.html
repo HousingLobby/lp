@@ -17,6 +17,7 @@
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
+  html,body{overflow-x:hidden;max-width:100%;}
   body{
     font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic Medium","Yu Gothic",sans-serif;
     font-weight:300;
@@ -112,7 +113,7 @@
     display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
     background:var(--line);border:1px solid var(--line);
   }
-  .point-card{background:var(--bg);padding:44px 40px;}
+  .point-card{background:var(--bg);padding:44px 40px;min-width:0;}
   .point-card .no{
     font-size:11px;letter-spacing:.3em;color:var(--navy);margin-bottom:16px;display:block;
   }
@@ -144,13 +145,13 @@
     background:var(--bg);
   }
   .madori-fig img{width:100%;max-width:300px;height:auto;}
-  .dl-table{width:100%;border-collapse:collapse;}
-  .dl-table th,.dl-table td{
+  .dl-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  .dl-table th,.dl-table td{overflow-wrap:anywhere;word-break:break-word;
     padding:16px 8px;border-bottom:1px solid var(--line);
     font-size:13px;text-align:left;vertical-align:top;font-weight:300;
     letter-spacing:.08em;
   }
-  .dl-table th{width:32%;color:var(--faint);font-size:11px;letter-spacing:.2em;white-space:nowrap;padding-right:24px;}
+  .dl-table th{width:32%;color:var(--faint);font-size:11px;letter-spacing:.2em;padding-right:24px;}
   .dl-table tr:first-child th,.dl-table tr:first-child td{padding-top:0;}
 
   /* ===== equipment ===== */
@@ -172,12 +173,13 @@
   /* ===== cost ===== */
   .cost{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
   .cost-flex{display:grid;grid-template-columns:1fr 1fr;gap:80px;}
+  .cost-box{min-width:0;}
   .cost-box h3{
     font-size:12px;font-weight:500;letter-spacing:.26em;color:var(--navy);
     margin-bottom:24px;text-transform:uppercase;
   }
-  .cost-table{width:100%;border-collapse:collapse;}
-  .cost-table th,.cost-table td{
+  .cost-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  .cost-table th,.cost-table td{overflow-wrap:anywhere;word-break:break-word;
     padding:14px 4px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;
     font-weight:300;letter-spacing:.08em;
   }
@@ -190,8 +192,8 @@
 
   /* ===== overview ===== */
   .overview{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-  .ov-table{width:100%;border-collapse:collapse;}
-  .ov-table th,.ov-table td{
+  .ov-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  .ov-table th,.ov-table td{overflow-wrap:anywhere;word-break:break-word;
     padding:15px 8px;border-bottom:1px solid var(--line);
     font-size:13px;text-align:left;vertical-align:top;font-weight:300;letter-spacing:.08em;
   }
@@ -254,7 +256,8 @@
     .cost-flex{grid-template-columns:1fr;gap:56px;}
     .cta{padding:80px 0;}
     .cta-btn{padding:20px 44px;letter-spacing:.14em;}
-    .header-cta{font-size:10px;padding:9px 16px;}
+    .header-inner{flex-wrap:wrap;row-gap:10px;}
+    .header-cta{font-size:10px;padding:9px 16px;flex:0 0 100%;text-align:center;}
   }
 </style>
 </head>
@@ -307,7 +310,7 @@
       <div class="point-card">
         <span class="no">02</span>
         <h3>フリーレント特典付き</h3>
-        <p>ハイムズクラブ契約開始日から次月までフリーレント。人気のオール電化1LDKをお得にスタート。</p>
+        <p>契約開始日から次月までフリーレント。人気のオール電化1LDKをお得にスタート。</p>
       </div>
       <div class="point-card">
         <span class="no">03</span>
