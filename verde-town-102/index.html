@@ -125,14 +125,10 @@
     display:grid;grid-template-columns:repeat(6,1fr);gap:20px;
   }
   .gallery-grid figure{margin:0;}
-  .g-frame{overflow:hidden;background:#eee;}
-  .g-ldk .g-frame,.g-room .g-frame{aspect-ratio:4/3;}
-  .g-bath .g-frame,.g-wic .g-frame{aspect-ratio:3/4;}
+  .g-frame{overflow:hidden;background:#eee;aspect-ratio:4/3;}
   .gallery-grid img{width:100%;height:100%;object-fit:cover;}
-  .g-ldk{grid-column:span 4;}
-  .g-bath{grid-column:span 2;}
-  .g-wic{grid-column:span 2;}
-  .g-room{grid-column:span 4;}
+  .g-wide{grid-column:span 4;}
+  .g-narrow{grid-column:span 2;}
   .gallery-grid figcaption{
     font-size:11px;letter-spacing:.16em;color:var(--sub);
     padding-top:12px;
@@ -255,8 +251,7 @@
     .point-grid{grid-template-columns:1fr;}
     .point-card{padding:32px 24px;}
     .gallery-grid{grid-template-columns:repeat(2,1fr);gap:14px;}
-    .g-ldk,.g-room{grid-column:span 2;}
-    .g-bath,.g-wic{grid-column:span 1;}
+    .g-wide,.g-narrow{grid-column:span 2;}
     .madori-flex{grid-template-columns:1fr;gap:40px;}
     .madori-fig{padding:28px;}
     .cost-flex{grid-template-columns:1fr;gap:56px;}
@@ -277,7 +272,7 @@
 
 <div class="hero">
   <div class="hero-photo">
-    <img src="images/exterior.jpg" alt="ベルデタウン 外観" width="1477" height="1108">
+    <img src="images/exterior.jpg" alt="ベルデタウン 外観" width="1200" height="900">
   </div>
   <div class="hero-body">
     <div>
@@ -338,10 +333,12 @@
       <h2>お部屋を見る</h2>
     </div>
     <div class="gallery-grid">
-      <figure class="g-ldk"><div class="g-frame"><img src="images/ldk.jpg" alt="カウンターキッチン IHクッキングヒーター" loading="lazy"></div><figcaption>キッチン｜IH・3口コンロのシステムキッチン</figcaption></figure>
-      <figure class="g-bath"><div class="g-frame"><img src="images/bath.jpg" alt="浴室 追い焚き機能・浴室乾燥機付き" loading="lazy"></div><figcaption>浴室｜追い焚き＆浴室乾燥機付き</figcaption></figure>
-      <figure class="g-wic"><div class="g-frame"><img src="images/wic.jpg" alt="クローゼット 全居室収納" loading="lazy"></div><figcaption>収納｜全居室クローゼット付き</figcaption></figure>
-      <figure class="g-room"><div class="g-frame"><img src="images/room.jpg" alt="洋室 全室フローリング" loading="lazy"></div><figcaption>洋室3.6帖｜全室フローリングで明るい</figcaption></figure>
+      <figure class="g-wide"><div class="g-frame"><img src="images/ldk.jpg" alt="LDK 白基調の家具でコーディネート" loading="lazy"></div><figcaption>LDK10.9帖｜明るく開放的な居住空間</figcaption></figure>
+      <figure class="g-narrow"><div class="g-frame"><img src="images/kitchen.jpg" alt="カウンターキッチン IHクッキングヒーター" loading="lazy"></div><figcaption>キッチン｜IH・3口コンロのシステムキッチン</figcaption></figure>
+      <figure class="g-narrow"><div class="g-frame"><img src="images/room.jpg" alt="洋室 全室フローリング" loading="lazy"></div><figcaption>洋室3.6帖｜全室フローリングで明るい</figcaption></figure>
+      <figure class="g-narrow"><div class="g-frame"><img src="images/bath.jpg" alt="浴室 追い焚き機能・浴室乾燥機付き" loading="lazy"></div><figcaption>浴室｜追い焚き＆浴室乾燥機付き</figcaption></figure>
+      <figure class="g-narrow"><div class="g-frame"><img src="images/washroom.jpg" alt="独立洗面所 洗面化粧台" loading="lazy"></div><figcaption>独立洗面所｜洗面化粧台</figcaption></figure>
+      <figure class="g-narrow"><div class="g-frame"><img src="images/toilet.jpg" alt="トイレ 温水洗浄便座" loading="lazy"></div><figcaption>トイレ｜温水洗浄便座付き</figcaption></figure>
     </div>
     <p class="gallery-note">気になるところは「かってに内見」で、ご自身の目でゆっくり確かめられます。</p>
   </div>
