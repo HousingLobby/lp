@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ご契約前に知っておきたいこと｜ハウジングロビーL&P</title>
+<meta name="description" content="かってに内見でこのお部屋が気に入ったら。敷金・敷引金・火災保険・原状回復などの不動産マメ知識と、ご契約までの流れをまとめました。">
+<style>
+  :root{
+    --yellow:#fdce00;
+    --yellow-pale:#fff3bf;
+    --honey:#f5a300;
+    --ink:#33290a;
+    --brown:#5a4a12;
+    --cream:#fffdf3;
+    --white:#ffffff;
+    --line:#f0e6c2;
+    --pink:#f6c9c9;
+    --pink-deep:#e2868a;
+    --sage:#dce8d2;
+    --shadow:0 10px 24px rgba(51,41,10,.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    color:var(--ink);
+    background:var(--cream);
+    line-height:1.85;
+  }
+  img{max-width:100%;display:block;}
+  ul{list-style:none;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px;}
+
+  .stripe{
+    height:12px;
+    background:repeating-linear-gradient(-45deg,var(--yellow) 0 14px,var(--ink) 14px 28px);
+  }
+
+  header{
+    position:sticky;top:0;z-index:100;
+    background:var(--yellow);
+    box-shadow:0 2px 10px rgba(51,41,10,.15);
+  }
+  .header-inner{
+    max-width:860px;margin:0 auto;padding:10px 20px;
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+  }
+  .brand{font-size:11px;font-weight:600;line-height:1.4;}
+  .brand strong{display:block;font-size:15px;font-weight:800;letter-spacing:.04em;}
+  .header-cta{
+    display:inline-block;
+    background:var(--ink);color:var(--yellow);
+    text-decoration:none;font-weight:800;font-size:13px;letter-spacing:.05em;
+    padding:10px 18px;border-radius:999px;
+    box-shadow:0 4px 0 rgba(0,0,0,.35);
+    white-space:nowrap;
+  }
+
+  .hero{
+    background:var(--white);
+    position:relative;overflow:hidden;
+    padding:56px 0 48px;
+  }
+  .hex-deco{position:absolute;pointer-events:none;opacity:.9;}
+  .hex{
+    position:absolute;
+    clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);
+    background:var(--yellow-pale);
+  }
+  .hex.solid{background:var(--yellow);}
+  .hero .h1{top:-30px;right:-40px;width:160px;height:142px;transform:rotate(12deg);}
+  .hero .h2{top:80px;right:90px;width:80px;height:70px;transform:rotate(-8deg);}
+  .hero .h3{bottom:30px;left:-50px;width:140px;height:124px;transform:rotate(6deg);}
+
+  .hero-inner{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 20px;text-align:center;}
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--ink);color:var(--yellow);
+    font-size:12.5px;font-weight:700;letter-spacing:.1em;
+    padding:8px 18px;border-radius:999px;margin-bottom:20px;
+  }
+  .hero h1{
+    font-size:clamp(24px,5.5vw,34px);
+    font-weight:900;letter-spacing:.02em;
+    margin-bottom:14px;
+  }
+  .hero h1 span{color:var(--honey);}
+  .hero p.lead{font-size:15px;color:var(--brown);max-width:480px;margin:0 auto;}
+
+  section{padding:48px 0;}
+  .section-title{
+    text-align:center;font-size:22px;font-weight:900;letter-spacing:.03em;
+    margin-bottom:8px;
+  }
+  .section-sub{
+    text-align:center;font-size:13px;color:var(--brown);margin-bottom:28px;
+  }
+  .dots{
+    display:flex;justify-content:center;gap:6px;margin-bottom:32px;
+  }
+  .dots span{width:5px;height:5px;border-radius:50%;background:var(--honey);display:block;}
+
+  .qa-grid{display:grid;gap:18px;grid-template-columns:1fr;}
+  @media(min-width:640px){.qa-grid.two{grid-template-columns:1fr 1fr;}}
+  .qa-card{
+    background:var(--white);border-radius:18px;padding:22px 20px;
+    box-shadow:var(--shadow);border:1px solid var(--line);
+  }
+  .qa-card .q{
+    display:flex;align-items:flex-start;gap:10px;
+    font-weight:800;font-size:15.5px;margin-bottom:10px;
+  }
+  .qa-card .q .badge{
+    flex:none;width:26px;height:26px;border-radius:50%;
+    background:var(--pink);color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:900;
+  }
+  .qa-card.alt .q .badge{background:var(--sage);}
+  .qa-card p{font-size:13.5px;color:var(--brown);}
+  .qa-card .highlight{
+    display:inline-block;color:var(--pink-deep);font-weight:800;
+    background:rgba(226,134,138,.12);padding:1px 6px;border-radius:4px;
+  }
+  .qa-card .note{
+    margin-top:12px;background:var(--yellow-pale);border-radius:10px;
+    padding:12px 14px;font-size:12.5px;color:var(--brown);
+  }
+
+  .must-banner{
+    background:var(--ink);color:var(--white);
+    border-radius:16px;padding:16px 18px;font-size:13px;
+    margin-bottom:24px;line-height:1.9;
+  }
+  .must-banner strong{color:var(--yellow);}
+
+  .cost-card{
+    background:var(--white);border-radius:18px;padding:0;
+    box-shadow:var(--shadow);border:1px solid var(--line);
+    overflow:hidden;margin-bottom:18px;
+  }
+  .cost-head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:var(--yellow-pale);padding:16px 20px;flex-wrap:wrap;
+  }
+  .cost-head .name{font-weight:900;font-size:16px;}
+  .cost-head .price{font-weight:900;font-size:15px;color:var(--honey);white-space:nowrap;}
+  .cost-body{padding:18px 20px;font-size:13.5px;color:var(--brown);}
+  .cost-body ul{margin:10px 0 12px;}
+  .cost-body li{position:relative;padding-left:18px;margin-bottom:6px;}
+  .cost-body li::before{content:"●";position:absolute;left:0;color:var(--honey);font-size:9px;top:5px;}
+
+  .flow{counter-reset:step;}
+  .flow-step{
+    position:relative;padding:18px 20px 18px 56px;
+    background:var(--white);border-radius:16px;margin-bottom:14px;
+    box-shadow:var(--shadow);border:1px solid var(--line);
+  }
+  .flow-step::before{
+    counter-increment:step;content:counter(step);
+    position:absolute;left:14px;top:18px;
+    width:28px;height:28px;border-radius:50%;
+    background:var(--ink);color:var(--yellow);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:13.5px;
+  }
+  .flow-step h3{font-size:15px;font-weight:800;margin-bottom:6px;}
+  .flow-step p{font-size:13px;color:var(--brown);}
+  .flow-step .wait{
+    display:inline-block;margin-top:8px;font-size:11.5px;font-weight:700;
+    color:var(--honey);background:var(--yellow-pale);padding:2px 8px;border-radius:999px;
+  }
+  .flow-step .req{
+    margin-top:8px;font-size:12px;color:var(--brown);
+    background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:8px 10px;
+  }
+
+  .cta{
+    background:var(--yellow);text-align:center;padding:48px 0;
+    position:relative;overflow:hidden;
+  }
+  .cta h2{font-size:21px;font-weight:900;margin-bottom:10px;}
+  .cta p{font-size:13.5px;color:var(--brown);margin-bottom:22px;}
+  .cta-btn{
+    display:inline-block;background:var(--ink);color:var(--yellow);
+    text-decoration:none;font-weight:800;font-size:15px;letter-spacing:.05em;
+    padding:16px 36px;border-radius:999px;
+    box-shadow:0 5px 0 rgba(0,0,0,.35);
+  }
+
+  footer{background:var(--ink);color:var(--yellow-pale);text-align:center;padding:26px 0;font-size:11.5px;}
+  footer strong{color:var(--yellow);}
+</style>
+</head>
+<body>
+
+<div class="stripe"></div>
+<header>
+  <div class="header-inner">
+    <div class="brand"><strong>はちのこ不動産</strong>株式会社ハウジングロビー</div>
+    <a class="header-cta" href="https://lin.ee/REPLACE_WITH_LINE_URL">LINEで相談</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hex-deco h1 hex solid"></div>
+  <div class="hex-deco h2 hex"></div>
+  <div class="hex-deco h3 hex solid"></div>
+  <div class="hero-inner">
+    <span class="hero-eyebrow">かってに内見　ご案内</span>
+    <h1>このお部屋が<span>気に入ったら</span>、<br>まずはここをチェック</h1>
+    <p class="lead">ご契約前によくいただくご質問と、お申し込みからお引渡しまでの流れをまとめました。わからないことはいつでもお気軽にご相談ください。</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-title">不動産マメ知識「契約編」</div>
+    <div class="dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="qa-grid two">
+      <div class="qa-card">
+        <div class="q"><span class="badge">Q</span>敷金って？</div>
+        <p>入居者から大家さんに支払われる預かり金です。家賃の滞納やお部屋の破損等が発生し、請求された修繕費用が滞った場合等に、大家さんが不足分を敷金から補填できることになっています。賃貸借契約を結ぶ際に「家賃◯ヶ月分」という形で初期費用としてまとめて支払います。</p>
+      </div>
+      <div class="qa-card">
+        <div class="q"><span class="badge">Q</span>敷引金って？</div>
+        <p>物件の退去までに家賃等の滞納等がなければ、預けた敷金から契約時に取り決めた敷引金を差し引いた差額が返金されます。敷引金は退去した物件の修繕費用に充てられるため、<span class="highlight">室内の状態がきれいな場合でも返金されません。</span>使用状況が悪く修繕費用が敷引金額以上になる場合は、別途請求される場合があります。</p>
+      </div>
+      <div class="qa-card" style="grid-column:1/-1;">
+        <div class="q"><span class="badge">Q</span>火災保険って絶対入らないといけないの？</div>
+        <p><span class="highlight">火災保険の加入は必須です。</span>例えば隣室から出火した場合に、失火者に「重大な過失」がなければ、被害にあった自分の部屋の家財等は弁償されません（失火法）。火災保険はご自身の家財を守るための保険でもあります。</p>
+        <div class="note">
+          <strong>もう少し詳しく言うと：</strong><br>
+          「家財保険」は自身の家具・家電などの損害を補償するもので、これが賃貸の場合の火災保険の基本（主契約）です。主契約に特約で付く「借家人賠償責任保険」は、漏水等で借りている部屋に損害を与えてしまったときに原状回復費用を補償。「個人賠償責任保険（特約）」は、漏水等によって隣や階下のお部屋へ損害を与えてしまったときの原状回復費用を補償できます。過失でダメージを与えた際、現状回復費用が高額になることもあるので必ず保険に加入しましょう！
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--white);">
+  <div class="wrap">
+    <div class="section-title">不動産マメ知識「退去編」</div>
+    <div class="dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="qa-grid two">
+      <div class="qa-card alt">
+        <div class="q"><span class="badge">Q</span>原状回復って？</div>
+        <p>物件の退去後に畳や襖の張り替え、破損箇所の補修やクリーニングなどを行い「入居時の状態に戻す」ことです（経年変化は除く）。</p>
+      </div>
+      <div class="qa-card alt">
+        <div class="q"><span class="badge">Q</span>善管注意義務って？</div>
+        <p>入居者様に求められる管理義務です。普段からお部屋を綺麗に使用し、故意・過失にかかわらずお部屋や設備が壊れたり傷ついたりした場合は管理会社に報告が必要となります。</p>
+      </div>
+      <div class="qa-card alt" style="grid-column:1/-1;">
+        <div class="q"><span class="badge">Q</span>退去時に費用が発生する「入居者過失」って？</div>
+        <p>通常の使用によって生じた損耗並びに経年変化を除き、「タバコのヤニ汚れ」「ペット不可でのペット飼育」「掃除等を怠って発生したカビやシミ汚れ」「クロスや床に落書き・傷・穴」「退去時に荷物を残した場合の撤去費用」などが入居者過失として請求されます。</p>
+        <div class="note" style="background:var(--pink);">
+          <strong>大事なこと：</strong> オーナー様からお借りしているお部屋ですので、退去する際は綺麗にしてお返ししましょう（＾＿＾）
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-title">お家賃の他に月額負担が必要なもの</div>
+    <div class="section-sub">※共益費・管理費・町費など物件によって異なる負担は別途お問合せください</div>
+    <div class="must-banner">
+      <strong>「サポート24」および「あんしん保証料」</strong>のお支払いは、物件にかかわらず必須となります。
+    </div>
+
+    <div class="cost-card">
+      <div class="cost-head">
+        <div class="name">① サポート24ってなあに？</div>
+        <div class="price">¥1,100 / 月額</div>
+      </div>
+      <div class="cost-body">
+        <p>例えば・・・</p>
+        <ul>
+          <li>鍵を紛失して家に入れない！</li>
+          <li>蛇口から水が漏れる！</li>
+          <li>台所やトイレの排水詰まり！</li>
+          <li>風呂のお湯が出ない・・・等</li>
+        </ul>
+        <p>いつ起こるかわからないトラブルに24時間365日無料で受付いたします。また、生活上の一般トラブルから起こる怪我や病気の応急処置のご相談もお受けできます。弊社では入居者様に加入をお願いしております。</p>
+      </div>
+    </div>
+
+    <div class="cost-card">
+      <div class="cost-head">
+        <div class="name">② あんしん保証料ってなあに？</div>
+        <div class="price">¥880 / 月額<br><span style="font-size:11.5px;font-weight:600;">※初回のみ初回保証料／¥10,000 1年毎更新保証料</span></div>
+      </div>
+      <div class="cost-body">
+        <p>入居者様が支払う家賃を、指定期日までに何らかの原因により支払えなかった場合、保証会社が一時的に大家さんへ立て替えて負担してくれます。但し入居者様は後日、家賃を保証会社に支払います。</p>
+        <p>また、入居時に原則（※）連帯保証人が不要ですので、連帯保証人を立てる必要がなく契約がスムーズです。（※あんしん保証株式会社の審査で承認された場合に限ります）</p>
+      </div>
+    </div>
+    <p style="text-align:center;font-weight:800;color:var(--honey);font-size:14px;">不明な点は遠慮なくお問合せください！</p>
+  </div>
+</section>
+
+<section style="background:var(--white);">
+  <div class="wrap">
+    <div class="section-title">ご契約までの流れ</div>
+    <div class="section-sub">このお部屋が気に入ったら</div>
+    <div class="flow">
+      <div class="flow-step">
+        <h3>① お申し込み</h3>
+        <p>LINEまたはお電話にて「お申し込み希望」とお伝えください。ショートメッセージにてWEB申込用のURLをお送りします。そちらからお申し込みをお願いいたします。</p>
+      </div>
+      <div class="flow-step">
+        <h3>② 入居審査</h3>
+        <p>保証会社および家主（オーナー）様による審査を行います。「承認」がおりましたらご連絡いたします。</p>
+        <div class="req">※保証会社または家主（オーナー）様より承認がおりない場合もございます。理由等はお答えできませんので予めご了承ください。</div>
+      </div>
+      <div class="flow-step">
+        <h3>③ 契約書作成</h3>
+        <p>契約書の作成を行います。契約書ができましたらご連絡いたします。</p>
+        <span class="wait">1week〜</span>
+      </div>
+      <div class="flow-step">
+        <h3>④ 重要事項説明／契約締結</h3>
+        <p>ご来店またはIT（WEB）にて重要事項説明を行います。IT（WEB）の場合は事前に重要事項説明書類を送付し、それを見ながら行います。問題がなければすべての書類に記名押印していただきます。IT（WEB）は書類をご返送ください。</p>
+        <div class="req">＜ご準備が必要なもの＞　■身分証明書（運転免許証、学生証、保険証）　■認印　■引き落とし口座番号がわかるもの<br>※契約により異なります。詳細はスタッフにお問合せください。</div>
+        <span class="wait">1week〜</span>
+      </div>
+      <div class="flow-step">
+        <h3>⑤ 契約金のお支払い</h3>
+        <p>期日までに契約金（初期費用）をお支払いください。</p>
+      </div>
+      <div class="flow-step">
+        <h3>⑥ 鍵お渡し</h3>
+        <p>店舗にてお渡しします。スマートロックの場合はメールで解錠Noをお送りしますので来店不要です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="hex-deco hex solid" style="top:-20px;left:-30px;width:110px;height:98px;transform:rotate(18deg);"></div>
+  <div class="hex-deco hex" style="bottom:-20px;right:-20px;width:120px;height:106px;transform:rotate(-10deg);"></div>
+  <div class="wrap" style="position:relative;z-index:1;">
+    <h2>このお部屋、気になったら</h2>
+    <p>LINEまたはお電話で「お申し込み希望」とお伝えください</p>
+    <a class="cta-btn" href="https://lin.ee/REPLACE_WITH_LINE_URL">LINEでお申し込み・相談する</a>
+  </div>
+</section>
+
+<footer>
+  <strong>株式会社ハウジングロビー</strong>｜はちのこ不動産<br>
+  長崎・諫早エリアの賃貸なら、かってに内見のハウジングロビーへ
+</footer>
+
+</body>
+</html>
