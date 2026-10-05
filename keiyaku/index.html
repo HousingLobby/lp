@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>契約書類集め</title>
+<style>
+:root{--bg:#f6f5f2;--card:#fff;--ink:#222;--sub:#666;--line:#ddd;--acc:#1f6f5c;--warn:#b33;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#1b1c1e;--card:#25272a;--ink:#eee;--sub:#aaa;--line:#3a3c40;--acc:#5fc2a6;--warn:#f08080;}}
+:root[data-theme="dark"]{--bg:#1b1c1e;--card:#25272a;--ink:#eee;--sub:#aaa;--line:#3a3c40;--acc:#5fc2a6;--warn:#f08080;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;line-height:1.6}
+main{max-width:720px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:22px;margin:0 0 4px}
+.sub{color:var(--sub);font-size:13px;margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
+label{display:block;font-weight:600;margin-bottom:6px}
+input[type=text]{width:100%;padding:10px 12px;font-size:16px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+button{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-size:15px;font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+button:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cands button{display:block;width:100%;text-align:left;margin-top:8px;background:var(--bg);color:var(--ink);border:1px solid var(--line);font-weight:400}
+.cands button:hover{border-color:var(--acc)}
+.cands small{color:var(--sub)}
+ul.result{list-style:none;padding:0;margin:8px 0}
+ul.result li{padding:6px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+.none{color:var(--warn)}
+#log{font-size:13px;color:var(--sub);white-space:pre-wrap;max-height:180px;overflow:auto}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<main>
+  <h1>契約書類集め</h1>
+  <p class="sub">物件名を入れると、物件台帳から契約用の書類を集めてZIPでダウンロードします。防災マップ（洪水・土砂・津波）も自動で作ります。</p>
+
+  <div class="card" id="loginCard">
+    <p>会社のMicrosoftアカウントでログインしてください。</p>
+    <button id="loginBtn">ログイン</button>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="card">
+      <label for="q">物件名（ひらがな・カナ・漢字・英字、多少の誤字はOK）</label>
+      <div class="row"><input type="text" id="q" placeholder="例：うみビル／それいゆ富士見"><button id="searchBtn">検索</button></div>
+      <div class="cands" id="cands"></div>
+    </div>
+
+    <div class="card hidden" id="runCard">
+      <div><b id="propTitle"></b></div>
+      <label for="addr" style="margin-top:12px">住所（防災マップ用・自動で読み取り。違えば直してください）</label>
+      <input type="text" id="addr" placeholder="読み取り中…">
+      <ul class="result" id="result"></ul>
+      <div class="row"><button id="zipBtn" disabled>ZIPをダウンロード</button><span id="status"></span></div>
+    </div>
+
+    <div class="card"><div id="log"></div></div>
+    <p class="sub" id="who"></p>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3.27.0/lib/msal-browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+// ===== 設定（アプリ登録後に2つのIDを入れる） =====
+const CLIENT_ID = "4ef3018f-0269-4e02-b741-a46664c0b0fc";
+const TENANT_ID = "f813919f-03b0-413d-a7c1-c2ff70d09433";
+const SITE = "hmao034998.sharepoint.com:/sites/msteams_c2a489";   // 物件台帳
+const AREA_ROOTS = ["長崎エリア", "県央エリア／物件台帳"];
+const PARKING_DIR = "長崎エリア/駐車場図面";
+const MASTER_PATH = "General/契約書類集め/物件マスタ.json";      // かな読み（任意）
+const SKIP = ["過去", "旧", "解約"];
+const CATS = {
+  "01_駐車場区画図": ["駐車場", "区画", "駐車位置"],
+  "02_鍵・郵便・宅配ボックス": ["郵便ボックス", "郵便受", "ポスト", "鍵", "カギ", "キーボックス", "宅配ボックス", "宅配BOX"],
+  "03_ハザードマップ": ["ハザード", "土砂", "洪水", "浸水", "津波"],
+  "04_ライフライン": ["ライフライン", "ご入居にあたって"],
+  "05_ポイ捨て・ごみステーション": ["ポイ捨て", "ごみステーション", "ゴミステーション", "喫煙禁止"],
+};
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+// ===== 共通 =====
+const $ = id => document.getElementById(id);
+const log = s => { $("log").textContent += s + "\n"; $("log").scrollTop = 1e9; };
+const nfkc = s => s.normalize("NFKC");
+function norm(s) {
+  s = nfkc(s).toLowerCase().replace(/[ぁ-ゖ]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+  return s.replace(/[\s・\-‐ー_()（）【】]/g, "");
+}
+function sim(a, b) { // 2文字単位の一致率（あいまい検索用）
+  if (!a || !b) return 0;
+  const g = s => { const m = new Map(); for (let i = 0; i < s.length - 1; i++) { const k = s.slice(i, i + 2); m.set(k, (m.get(k) || 0) + 1); } return m; };
+  if (a.length < 2 || b.length < 2) return a === b ? 1 : 0;
+  const A = g(a), B = g(b); let hit = 0;
+  for (const [k, v] of A) hit += Math.min(v, B.get(k) || 0);
+  return 2 * hit / (a.length + b.length - 2);
+}
+
+// ===== ログイン・Graph =====
+let msal = null;
+const msalConfig = () => ({
+  auth: { clientId: CLIENT_ID, authority: `https://login.microsoftonline.com/${TENANT_ID}`, redirectUri: location.origin + location.pathname },
+  cache: { cacheLocation: "localStorage" },
+});
+const SCOPES = ["Files.Read.All", "Sites.Read.All"];
+let account = null, driveId = null;
+
+async function token() {
+  try { return (await msal.acquireTokenSilent({ scopes: SCOPES, account })).accessToken; }
+  catch { await msal.acquireTokenRedirect({ scopes: SCOPES, account }); }
+}
+async function graph(path) {
+  const url = path.startsWith("http") ? path : "https://graph.microsoft.com/v1.0" + path;
+  for (let i = 0; i < 4; i++) {
+    const r = await fetch(url, { headers: { Authorization: "Bearer " + await token() } });
+    if (r.status === 429 || r.status === 503) { await new Promise(s => setTimeout(s, 1500 * (i + 1))); continue; }
+    if (!r.ok) throw new Error(`Graph ${r.status}: ${path}`);
+    return r.json();
+  }
+}
+async function children(idOrPath) {
+  const base = idOrPath.startsWith("/") ? `/drives/${driveId}/root:${encodeURI(idOrPath)}:/children` : `/drives/${driveId}/items/${idOrPath}/children`;
+  let r = await graph(base + "?$top=999"), out = r.value;
+  while (r["@odata.nextLink"]) { r = await graph(r["@odata.nextLink"]); out = out.concat(r.value); }
+  return out;
+}
+
+// ===== 物件フォルダ一覧（1日キャッシュ） =====
+let props = [], master = [];
+async function loadProps() {
+  const c = JSON.parse(localStorage.getItem("keiyaku_props") || "null");
+  if (c && Date.now() - c.t < 864e5) { props = c.v; return; }
+  log("物件フォルダ一覧を作成中（初回のみ1〜2分）…");
+  const found = [];
+  let level = AREA_ROOTS.map(p => ({ path: "/" + p, depth: 0 }));
+  while (level.length) {
+    const next = [];
+    await Promise.all(level.map(async d => {
+      const items = await children(d.path).catch(() => []);
+      for (const it of items.filter(i => i.folder)) {
+        const path = d.path + "/" + it.name;
+        if (SKIP.some(k => it.name.includes(k))) continue;
+        const m = it.name.match(/【(\d+)】|[（(](\d{3,6})[)）]/);
+        found.push({ id: it.id, name: it.name, path, no: m ? (m[1] || m[2]) : "" });
+        if (d.depth < 4) next.push({ path, depth: d.depth + 1 });
+      }
+    }));
+    level = next;
+  }
+  props = found;
+  try { localStorage.setItem("keiyaku_props", JSON.stringify({ t: Date.now(), v: props })); } catch {}
+  log(`物件フォルダ ${props.length} 件を読み込みました`);
+}
+async function loadMaster() {
+  try {
+    const it = await graph(`/drives/${driveId}/root:/${encodeURI(MASTER_PATH)}`);
+    master = await (await fetch(it["@microsoft.graph.downloadUrl"])).json();
+  } catch { master = []; }
+}
+
+function search(q) {
+  const n = norm(q);
+  const kanaHits = master.filter(m => m.カナ && (sim(n, norm(m.カナ)) > .5 || norm(m.カナ).includes(n))).map(m => m.物件No);
+  return props.map(p => {
+    const pn = norm(p.name.replace(/【\d+】|[（(]\d+[)）]/g, ""));
+    let s = sim(n, pn);
+    if (pn.includes(n) || n.includes(pn)) s += .5;
+    if (p.no && kanaHits.includes(p.no)) s += .6;
+    return { p, s };
+  }).filter(x => x.s > .3).sort((a, b) => b.s - a.s).slice(0, 6).map(x => x.p);
+}
+
+// ===== 書類集め =====
+async function walk(id, prefix, out) {
+  for (const it of await children(id)) {
+    if (SKIP.some(k => it.name.includes(k))) continue;
+    if (it.folder) await walk(it.id, prefix + it.name + "/", out);
+    else out.push({ name: it.name, url: it["@microsoft.graph.downloadUrl"], id: it.id, inDir: true });
+  }
+  return out;
+}
+let current = null;
+async function collect(prop) {
+  current = { prop, files: {}, missing: [] };
+  $("runCard").classList.remove("hidden");
+  $("propTitle").textContent = prop.name;
+  $("result").innerHTML = ""; $("zipBtn").disabled = true; $("addr").value = "";
+  $("status").textContent = "書類を検索中…";
+  const files = await walk(prop.id, "", []);
+  const base = norm(prop.name.replace(/【\d+】|[（(]\d+[)）]/g, "")).replace(/(?<=[^a-z0-9])[a-zⅰ-ⅻ0-9]$/, "");
+  const parking = (await children("/" + PARKING_DIR).catch(() => [])).filter(f => f.file && base.length >= 3 && norm(f.name).includes(base))
+    .map(f => ({ name: f.name, url: f["@microsoft.graph.downloadUrl"], inDir: false }));
+  for (const cat of Object.keys(CATS)) current.files[cat] = [];
+  for (const f of files.concat(parking)) {
+    const fn = nfkc(f.name);
+    for (const [cat, kws] of Object.entries(CATS)) {
+      if (!cat.startsWith("01") && !f.inDir) continue;
+      if (kws.some(k => fn.includes(nfkc(k)))) { current.files[cat].push(f); break; }
+    }
+  }
+  for (const [cat, fs] of Object.entries(current.files)) {
+    const li = document.createElement("li");
+    li.innerHTML = `<span>${cat}</span><span class="${fs.length ? "" : "none"}">${fs.length ? fs.length + "件" : "なし"}</span>`;
+    $("result").append(li);
+    if (!fs.length) current.missing.push(cat);
+  }
+  $("status").textContent = "住所を読み取り中…";
+  $("addr").value = await findAddress(files) || "";
+  $("addr").placeholder = "住所が見つかりません。入力すると防災マップを作ります";
+  $("status").textContent = ""; $("zipBtn").disabled = false;
+}
+
+// ===== 住所の読み取り =====
+const CITY = "((?:長崎|諫早|諌早|大村|島原|雲仙|佐世保)市|(?:西彼杵|東彼杵)郡\\S{1,4}?町)";
+const NUM = "[0-9]+(?:[-‐ー−の][0-9]+)*";
+const RE_LABEL = new RegExp("(?:〒\\d{3}[-‐ー−]\\d{4}|住所|所在地)[:：]*(?:〒\\d{3}[-‐ー−]\\d{4})?(?:長崎県)?" + CITY + "(\\S{1,12}?" + NUM + ")");
+const RE_ANY = new RegExp("(?:長崎県)?" + CITY + "(\\S{1,12}?" + NUM + ")");
+function pickAddr(text, any) {
+  let t = nfkc(text).replace(/[ \t　]+/g, "").replace(/(\d)(?:番地?|丁目)(?=\d)/g, "$1-").replace(/(\d)(?:番地?|号)/g, "$1");
+  const m = t.match(RE_LABEL) || (any ? t.match(RE_ANY) : null);
+  return m ? "長崎県" + m[1].replace("諌早", "諫早") + m[2] : null;
+}
+async function textOf(f) {
+  const buf = await (await fetch(f.url)).arrayBuffer();
+  const ext = f.name.split(".").pop().toLowerCase();
+  if (ext === "pdf") {
+    const doc = await pdfjsLib.getDocument({ data: buf }).promise; let t = "";
+    for (let i = 1; i <= Math.min(2, doc.numPages); i++) t += (await (await doc.getPage(i)).getTextContent()).items.map(x => x.str).join("");
+    return t;
+  }
+  if (ext === "xlsx") { const z = await JSZip.loadAsync(buf); return (await z.file("xl/sharedStrings.xml")?.async("string")) || ""; }
+  const d = new TextDecoder("utf-16le");
+  return d.decode(buf) + d.decode(buf.slice(1));
+}
+async function findAddress(files) {
+  const pr = files.filter(f => /ライフライン|入居/.test(f.name) && /\.(pdf|xls|xlsx|doc)$/i.test(f.name)).slice(0, 8);
+  for (const f of pr) { try { const a = pickAddr(await textOf(f)); if (a) return a; } catch {} }
+  for (const f of files) { const a = pickAddr(f.name, true); if (a) return a; }
+  return null;
+}
+
+// ===== 防災マップ（国土地理院 重ねるハザードマップ） =====
+const Z = 16, SPAN = 2;
+const MAPS = {
+  "洪水": ["01_flood_l2_shinsuishin_data"],
+  "土砂災害": ["05_dosekiryukeikaikuiki", "05_kyukeishakeikaikuiki", "05_jisuberikeikaikuiki"],
+  "津波・高潮": ["04_tsunami_newlegend_data", "03_hightide_l2_shinsuishin_data"],
+};
+const LEGEND = {
+  "洪水": [["#f7f5a9", "0.5m未満"], ["#ffd8c0", "0.5〜3m"], ["#ffb7b7", "3〜5m"], ["#ff9191", "5〜10m"], ["#f285c9", "10〜20m"], ["#dc7adc", "20m以上"]],
+  "土砂災害": [["#e6c832", "警戒区域（黄）"], ["#c83c3c", "特別警戒区域（赤）"]],
+  "津波・高潮": [["#f7f5a9", "0.3m未満"], ["#ffd8c0", "0.3〜1m"], ["#ffb7b7", "1〜3m"], ["#ff9191", "3〜5m"], ["#f285c9", "5〜10m"], ["#dc7adc", "10m以上"]],
+};
+const img = url => new Promise(res => { const i = new Image(); i.crossOrigin = "anonymous"; i.onload = () => res(i); i.onerror = () => res(null); i.src = url; });
+async function geocode(addr) {
+  const r = await (await fetch("https://msearch.gsi.go.jp/address-search/AddressSearch?q=" + encodeURIComponent(addr))).json();
+  if (!r.length) return null;
+  const [lon, lat] = r[0].geometry.coordinates; return { lat, lon, title: r[0].properties.title };
+}
+async function hazardPdf(addr, name) {
+  const g = await geocode(addr); if (!g) return null;
+  const n = 2 ** Z, fx = (g.lon + 180) / 360 * n;
+  const fy = (1 - Math.log(Math.tan(g.lat * Math.PI / 180) + 1 / Math.cos(g.lat * Math.PI / 180)) / Math.PI) / 2 * n;
+  const cx = Math.floor(fx), cy = Math.floor(fy), S = (2 * SPAN + 1) * 256;
+  const pdf = new jspdf.jsPDF({ unit: "px", format: [1240, 1754], hotfixes: ["px_scaling"] });
+  let first = true;
+  for (const [kind, layers] of Object.entries(MAPS)) {
+    const map = document.createElement("canvas"); map.width = map.height = S;
+    const m = map.getContext("2d"); m.fillStyle = "#fff"; m.fillRect(0, 0, S, S);
+    const jobs = [];
+    for (let dx = -SPAN; dx <= SPAN; dx++) for (let dy = -SPAN; dy <= SPAN; dy++) {
+      const x = cx + dx, y = cy + dy, px = (dx + SPAN) * 256, py = (dy + SPAN) * 256;
+      jobs.push((async () => {
+        const urls = [`https://cyberjapandata.gsi.go.jp/xyz/pale/${Z}/${x}/${y}.png`, ...layers.map(l => `https://disaportaldata.gsi.go.jp/raster/${l}/${Z}/${x}/${y}.png`)];
+        return { px, py, ims: await Promise.all(urls.map(img)) };
+      })());
+    }
+    for (const t of await Promise.all(jobs)) t.ims.forEach((im, i) => { if (im) { m.globalAlpha = i ? .75 : 1; m.drawImage(im, t.px, t.py); } });
+    m.globalAlpha = 1;
+    const mx = (fx - cx + SPAN) * 256, my = (fy - cy + SPAN) * 256;
+    m.strokeStyle = "#d00"; m.lineWidth = 6; m.beginPath(); m.arc(mx, my, 14, 0, 7); m.stroke();
+    m.fillStyle = "#d00"; m.beginPath(); m.arc(mx, my, 4, 0, 7); m.fill();
+
+    const pg = document.createElement("canvas"); pg.width = 1240; pg.height = 1754;
+    const c = pg.getContext("2d"); c.fillStyle = "#fff"; c.fillRect(0, 0, 1240, 1754); c.fillStyle = "#000";
+    const F = (s, w = 600) => `${w} ${s}px "Hiragino Sans","Yu Gothic","Meiryo",sans-serif`;
+    c.font = F(48, 700); c.fillText(`防災マップ（${kind}）`, 60, 100);
+    c.font = F(30); c.fillText(`物件名：${name}`, 60, 160); c.fillText(`所在地：${g.title}`, 60, 205);
+    c.drawImage(map, 60, 230, 1120, 1120);
+    c.font = F(26); c.fillText("凡例　● 赤丸＝物件位置", 60, 1400);
+    LEGEND[kind].forEach(([col, lab], i) => { const x = 60 + i * (kind === "土砂災害" ? 320 : 190); c.fillStyle = col; c.fillRect(x, 1420, 34, 34); c.strokeStyle = "#999"; c.strokeRect(x, 1420, 34, 34); c.fillStyle = "#000"; c.font = F(22, 400); c.fillText(lab, x + 42, 1446); });
+    c.font = F(20, 400); c.fillText("※色が無い範囲は、想定区域外またはデータ未整備です。最新情報は各市町のハザードマップでご確認ください。", 60, 1520);
+    c.fillStyle = "#888"; c.fillText("出典：ハザードマップポータルサイト（国土交通省）、地理院タイル（国土地理院）", 60, 1700);
+    if (!first) pdf.addPage([1240, 1754]);
+    pdf.addImage(pg.toDataURL("image/jpeg", .9), "JPEG", 0, 0, 1240, 1754); first = false;
+  }
+  return { blob: pdf.output("blob"), url: `https://disaportal.gsi.go.jp/maps/?ll=${g.lat},${g.lon}&z=16&base=pale` };
+}
+
+// ===== ZIP作成 =====
+async function makeZip() {
+  const { prop, files, missing } = current, zip = new JSZip();
+  const name = prop.name.replace(/【\d+】/, "").trim(), day = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const root = zip.folder(`契約書類_${name}_${day}`);
+  $("zipBtn").disabled = true;
+  for (const [cat, fs] of Object.entries(files)) {
+    const dir = root.folder(cat), used = new Set();
+    for (const f of fs) {
+      $("status").textContent = `ダウンロード中：${f.name}`;
+      let fn = f.name, i = 2; const dot = fn.lastIndexOf(".");
+      while (used.has(fn)) fn = (dot > 0 ? f.name.slice(0, dot) : f.name) + "_" + i++ + (dot > 0 ? f.name.slice(dot) : "");
+      used.add(fn);
+      dir.file(fn, await (await fetch(f.url)).blob());
+    }
+  }
+  const addr = $("addr").value.trim();
+  if (addr) {
+    $("status").textContent = "防災マップ作成中（約30秒）…";
+    const h = await hazardPdf(addr, name).catch(e => (log("防災マップ失敗: " + e.message), null));
+    if (h) {
+      const d = root.folder("03_ハザードマップ").folder("Web防災マップ");
+      d.file(`防災マップ_${name}.pdf`, h.blob);
+      d.file("重ねるハザードマップ（ブラウザで開く）.url", `[InternetShortcut]\r\nURL=${h.url}\r\n`);
+    } else log("防災マップ：住所が見つかりませんでした");
+  }
+  root.file("不足書類.txt", missing.map(c => `${c}: なし`).join("\r\n") || "不足なし");
+  $("status").textContent = "ZIP作成中…";
+  const blob = await zip.generateAsync({ type: "blob" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `契約書類_${name}_${day}.zip`; a.click();
+  $("status").textContent = "ダウンロードしました"; $("zipBtn").disabled = false;
+  log(`✓ ${name}：完了`);
+}
+
+// ===== 画面 =====
+$("loginBtn").onclick = () => msal.loginRedirect({ scopes: SCOPES });
+$("searchBtn").onclick = () => {
+  const q = $("q").value.trim(); if (!q) return;
+  const r = search(q); $("cands").innerHTML = r.length ? "" : "<p class='none'>見つかりません。別の書き方で試してください。</p>";
+  for (const p of r) {
+    const b = document.createElement("button");
+    b.innerHTML = `${p.name}<br><small>${p.path.slice(1)}</small>`;
+    b.onclick = () => collect(p).catch(e => log("エラー: " + e.message));
+    $("cands").append(b);
+  }
+};
+$("q").addEventListener("keydown", e => { if (e.key === "Enter" && !e.isComposing) $("searchBtn").click(); });
+$("zipBtn").onclick = () => makeZip().catch(e => { log("エラー: " + e.message); $("zipBtn").disabled = false; });
+
+(async () => {
+  if (CLIENT_ID.startsWith("ここに")) { $("loginCard").innerHTML = "<p>設定待ち：アプリ登録のIDが未設定です。</p>"; return; }
+  msal = new msalBrowser.PublicClientApplication(msalConfig());
+  await msal.initialize();
+  const r = await msal.handleRedirectPromise().catch(e => (log("ログイン失敗: " + e.message), null));
+  account = r?.account || msal.getAllAccounts()[0];
+  if (!account) return;
+  $("loginCard").classList.add("hidden"); $("app").classList.remove("hidden");
+  $("who").textContent = "ログイン中：" + account.username;
+  driveId = (await graph(`/sites/${SITE}/drive?$select=id`)).id;
+  await Promise.all([loadProps(), loadMaster()]);
+  log("準備完了。物件名を入れて検索してください。");
+})().catch(e => log("エラー: " + e.message));
+</script>
+</body>
+</html>
