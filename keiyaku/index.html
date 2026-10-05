@@ -101,7 +101,7 @@ function sim(a, b) { // 2文字単位の一致率（あいまい検索用）
 }
 
 // ===== ログイン・Graph =====
-let msal = null;
+let pca = null;  // ※ window.msal（ライブラリ本体）と名前を分ける
 const msalConfig = () => ({
   auth: { clientId: CLIENT_ID, authority: `https://login.microsoftonline.com/${TENANT_ID}`, redirectUri: location.origin + location.pathname },
   cache: { cacheLocation: "localStorage" },
@@ -110,8 +110,8 @@ const SCOPES = ["Files.Read.All", "Sites.Read.All"];
 let account = null, driveId = null;
 
 async function token() {
-  try { return (await msal.acquireTokenSilent({ scopes: SCOPES, account })).accessToken; }
-  catch { await msal.acquireTokenRedirect({ scopes: SCOPES, account }); }
+  try { return (await pca.acquireTokenSilent({ scopes: SCOPES, account })).accessToken; }
+  catch { await pca.acquireTokenRedirect({ scopes: SCOPES, account }); }
 }
 async function graph(path) {
   const url = path.startsWith("http") ? path : "https://graph.microsoft.com/v1.0" + path;
@@ -336,7 +336,7 @@ async function makeZip() {
 }
 
 // ===== 画面 =====
-$("loginBtn").onclick = () => msal.loginRedirect({ scopes: SCOPES });
+$("loginBtn").onclick = () => pca.loginRedirect({ scopes: SCOPES });
 $("searchBtn").onclick = () => {
   const q = $("q").value.trim(); if (!q) return;
   const r = search(q); $("cands").innerHTML = r.length ? "" : "<p class='none'>見つかりません。別の書き方で試してください。</p>";
@@ -352,10 +352,10 @@ $("zipBtn").onclick = () => makeZip().catch(e => { log("エラー: " + e.message
 
 (async () => {
   if (CLIENT_ID.startsWith("ここに")) { $("loginCard").innerHTML = "<p>設定待ち：アプリ登録のIDが未設定です。</p>"; return; }
-  msal = new msalBrowser.PublicClientApplication(msalConfig());
-  await msal.initialize();
-  const r = await msal.handleRedirectPromise().catch(e => (log("ログイン失敗: " + e.message), null));
-  account = r?.account || msal.getAllAccounts()[0];
+  pca = new window.msal.PublicClientApplication(msalConfig());
+  await pca.initialize();
+  const r = await pca.handleRedirectPromise().catch(e => (log("ログイン失敗: " + e.message), null));
+  account = r?.account || pca.getAllAccounts()[0];
   if (!account) return;
   $("loginCard").classList.add("hidden"); $("app").classList.remove("hidden");
   $("who").textContent = "ログイン中：" + account.username;
