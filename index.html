@@ -1,1 +1,145 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>Housing Lobby LP</title></head><body></body></html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>物件LP一覧｜ハウジングロビー</title>
+<style>
+:root{--y:#fdce00;--yl:#fff6cc;--ink:#33290a;--sub:#6b5e3a;--line:#eadfb8;--bg:#fffdf5;--card:#fff;--ok:#2f8f4e;--ng:#9a9a9a}
+@media (prefers-color-scheme: dark){:root{--yl:#3a3218;--ink:#f5efd9;--sub:#c9bd95;--line:#4a4128;--bg:#1d1a12;--card:#26221a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Sans","Noto Sans JP",sans-serif;font-size:15px;line-height:1.5}
+header{background:var(--y);color:#33290a;padding:14px 16px}
+header h1{margin:0;font-size:20px;letter-spacing:.04em}
+header p{margin:2px 0 0;font-size:12px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+.tools{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 0}
+.search{width:100%;font-size:16px;padding:11px 14px;border:2px solid var(--ink);border-radius:999px;background:var(--card);color:var(--ink)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.chip{border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+.chip.on{background:var(--ink);color:var(--bg)}
+select{font-size:13px;padding:6px 10px;border:1.5px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink)}
+label.tg{font-size:13px;display:flex;gap:5px;align-items:center;cursor:pointer}
+.count{font-size:13px;color:var(--sub);margin:14px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;padding-bottom:40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card.closed{opacity:.55}
+.ph{height:0;padding-top:62.5%;background:var(--yl);display:block;position:relative;overflow:hidden}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.st{position:absolute;top:8px;left:8px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--ok);color:#fff}
+.closed .st{background:var(--ng)}
+.body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1}
+.nm{font-weight:700;font-size:16px;margin:0}
+.meta{font-size:13px;color:var(--sub)}
+.rent{font-weight:800;font-size:18px}
+.rent small{font-size:12px;font-weight:600;color:var(--sub);margin-left:6px}
+.btns{display:flex;gap:6px;margin-top:auto;padding-top:8px}
+.btns a,.btns button{flex:1;white-space:nowrap;text-align:center;font-size:13px;padding:7px 4px;border-radius:8px;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);text-decoration:none;cursor:pointer;font-family:inherit}
+.btns a{background:var(--y);color:#33290a;border-color:var(--y);font-weight:700}
+.qr{display:none;justify-content:center;padding:10px;background:#fff;border-radius:8px;margin-top:8px}
+.qr.show{display:flex}
+.empty{padding:40px 0;text-align:center;color:var(--sub)}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+footer{font-size:12px;color:var(--sub);text-align:center;padding:16px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>物件LP一覧</h1><p>ハウジングロビーL&amp;P 社内用｜更新 2026/10/08 12:10</p></div></header>
+<div class="tools"><div class="wrap">
+  <input id="q" class="search" type="search" placeholder="物件名・地名・間取りで検索（例：時津 3DK）" autocomplete="off">
+  <div class="row" id="areas"></div>
+  <div class="row">
+    <select id="madori"><option value="">間取り：すべて</option></select>
+    <select id="sort">
+      <option value="new">新しい順</option><option value="cheap">賃料が安い順</option><option value="high">賃料が高い順</option><option value="name">物件名順</option>
+    </select>
+    <label class="tg"><input type="checkbox" id="openOnly" checked>募集中のみ</label>
+  </div>
+</div></div>
+<main class="wrap">
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"></div>
+</main>
+<footer>掲載内容はLP作成時点の情報です。最新の募集状況はリアプロBBで確認してください。</footer>
+<div class="toast" id="toast">URLをコピーしました</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const DATA = [{"name": "douce clarte", "madori": "2LDK", "rent": 69000, "rent_s": "69,000円", "area": "大村市", "adr": "大村市富の原2丁目654-1", "url": "https://housinglobby.github.io/lp/douce-clarte/", "thumb": "douce-clarte/images/exterior.jpg", "date": "2026/07/27", "status": "募集中"}, {"name": "グランコートくさなぎII", "madori": "1LDK", "rent": 48000, "rent_s": "48,000円", "area": "大村市", "adr": "大村市宮小路３丁目2015番地4", "url": "https://housinglobby.github.io/lp/gran-court-kusanagi2/", "thumb": "gran-court-kusanagi2/images/exterior.jpg", "date": "2026/08/06", "status": "募集中"}, {"name": "ハイアットコート", "madori": "2DK", "rent": 69000, "rent_s": "69,000円", "area": "時津町", "adr": "西彼杵郡時津町西時津郷213番地4", "url": "https://housinglobby.github.io/lp/hyatt-court/", "thumb": "hyatt-court/images/exterior.jpg", "date": "2026/09/03", "status": "募集中"}, {"name": "KAKOI TERRACE", "madori": "2LDK", "rent": 91000, "rent_s": "91,000円", "area": "諫早市", "adr": "諫早市多良見町囲554", "url": "https://housinglobby.github.io/lp/kakoi-terrace/", "thumb": "kakoi-terrace/images/exterior.jpg", "date": "2026/07/26", "status": "募集中"}, {"name": "みのしま荘", "madori": "1LDK", "rent": 46000, "rent_s": "46,000円", "area": "大村市", "adr": "大村市富の原２丁目616番地3", "url": "https://housinglobby.github.io/lp/minoshima-so/", "thumb": "minoshima-so/images/exterior.jpg", "date": "2026/08/24", "status": "募集中"}, {"name": "西町貸家", "madori": "1SK", "rent": 38000, "rent_s": "38,000円", "area": "長崎市", "adr": "長崎市西町5-44", "url": "https://housinglobby.github.io/lp/nishimachi-house/", "thumb": "nishimachi-house/images/exterior.jpg", "date": "2026/08/09", "status": "募集中"}, {"name": "プレジールふじた", "madori": "1LDK", "rent": 50000, "rent_s": "50,000円", "area": "長与町", "adr": "西彼杵郡長与町岡郷533", "url": "https://housinglobby.github.io/lp/plaisir-fujita/", "thumb": "plaisir-fujita/images/exterior.jpg", "date": "2026/10/03", "status": "募集中"}, {"name": "リバーサイドスワ", "madori": "2LDK", "rent": 61000, "rent_s": "61,000円", "area": "大村市", "adr": "大村市上諏訪町844-5", "url": "https://housinglobby.github.io/lp/riverside-suwa-205/", "thumb": "riverside-suwa-205/images/exterior.jpg", "date": "2026/07/05", "status": "募集中"}, {"name": "セジュール須田ノ木", "madori": "1LDK", "rent": 55000, "rent_s": "55,000円", "area": "大村市", "adr": "大村市須田ノ木町832-4", "url": "https://housinglobby.github.io/lp/sejour-sudanoki/", "thumb": "sejour-sudanoki/images/exterior.jpg", "date": "2026/09/13", "status": "募集中"}, {"name": "セジュールYMII", "madori": "1R", "rent": 49000, "rent_s": "49,000円", "area": "諫早市", "adr": "諫早市金谷町13－24", "url": "https://housinglobby.github.io/lp/sejour-ymii/", "thumb": "sejour-ymii/images/exterior.jpg", "date": "2026/08/03", "status": "募集中"}, {"name": "ベルデタウン", "madori": "1LDK", "rent": 49000, "rent_s": "49,000円", "area": "大村市", "adr": "大村市松原本町273-3", "url": "https://housinglobby.github.io/lp/verde-town-102/", "thumb": "verde-town-102/images/exterior.jpg", "date": "2026/07/21", "status": "募集中"}, {"name": "ウィング片淵", "madori": "1K", "rent": 37000, "rent_s": "37,000円", "area": "長崎市", "adr": "長崎市片淵２丁目14-7", "url": "https://housinglobby.github.io/lp/wing-katafuchi/", "thumb": "wing-katafuchi/images/exterior.jpg", "date": "2026/08/08", "status": "募集中"}, {"name": "エスポワール坊ノ前Ａ", "madori": "3LDK", "rent": 66000, "rent_s": "66,000円", "area": "時津町", "adr": "西彼杵郡時津町浜田郷1645－1", "url": "https://housinglobby.github.io/lp/espoir-bonomae-a/", "thumb": "espoir-bonomae-a/images/exterior.jpg", "date": "2026/10/05", "status": "募集中"}, {"name": "グランディール中嶋", "madori": "3DK", "rent": 58000, "rent_s": "58,000円", "area": "時津町", "adr": "西彼杵郡時津町日並郷2102番地2", "url": "https://housinglobby.github.io/lp/grandir-nakashima/", "thumb": "grandir-nakashima/images/exterior.jpg", "date": "2026/10/08", "status": "募集中"}, {"name": "プチメゾン", "madori": "1K", "rent": 38000, "rent_s": "38,000円", "area": "長崎市", "adr": "長崎市旭町26－8", "url": "https://housinglobby.github.io/lp/petit-maison/", "thumb": "petit-maison/images/exterior.jpg", "date": "2026/10/08", "status": "募集中"}, {"name": "Amity CROSS", "madori": "1R", "rent": 49000, "rent_s": "49,000円", "area": "長崎市", "adr": "長崎市辻町22-56", "url": "https://housinglobby.github.io/lp/amity-cross/", "thumb": "amity-cross/images/exterior.jpg", "date": "2026/10/08", "status": "募集中"}];
+const CLOSED = ["募集終了", "成約済", "停止"];
+const nz = s => (s || "").normalize("NFKC").toLowerCase().replace(/\s+/g, "");
+const kata = s => s.replace(/[ぁ-ゖ]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const st = {q: "", area: "", madori: "", sort: "new", openOnly: true};
+try { Object.assign(st, JSON.parse(localStorage.getItem("lpIndex") || "{}"), {q: ""}); } catch (e) {}
+const save = () => { try { localStorage.setItem("lpIndex", JSON.stringify({area: st.area, madori: st.madori, sort: st.sort, openOnly: st.openOnly})); } catch (e) {} };
+
+const areas = [...new Set(DATA.map(d => d.area).filter(Boolean))].sort();
+const madoris = [...new Set(DATA.map(d => d.madori).filter(Boolean))].sort();
+const areasEl = document.getElementById("areas");
+function drawAreas() {
+  areasEl.innerHTML = ["", ...areas].map(a => `<button class="chip${st.area === a ? " on" : ""}" data-a="${esc(a)}">${a ? esc(a) : "すべてのエリア"}</button>`).join("");
+}
+areasEl.addEventListener("click", e => { const b = e.target.closest(".chip"); if (!b) return; st.area = b.dataset.a; drawAreas(); render(); save(); });
+const mSel = document.getElementById("madori");
+mSel.innerHTML += madoris.map(m => `<option>${esc(m)}</option>`).join("");
+
+function render() {
+  const terms = st.q.normalize("NFKC").trim().split(/\s+/).map(w => kata(nz(w))).filter(Boolean);
+  let list = DATA.filter(d => {
+    if (st.openOnly && CLOSED.includes(d.status)) return false;
+    if (st.area && d.area !== st.area) return false;
+    if (st.madori && d.madori !== st.madori) return false;
+    const hay = kata(nz([d.name, d.area, d.adr, d.madori, d.rent_s, d.status].join(" ")));
+    return terms.every(t => hay.includes(t));
+  });
+  const by = {new: (a, b) => b.date.localeCompare(a.date), cheap: (a, b) => a.rent - b.rent, high: (a, b) => b.rent - a.rent, name: (a, b) => a.name.localeCompare(b.name, "ja")};
+  list.sort(by[st.sort] || by.new);
+  document.getElementById("count").textContent = `${list.length}件 表示 ／ 全${DATA.length}件`;
+  const grid = document.getElementById("grid");
+  if (!list.length) { grid.innerHTML = `<div class="empty">該当するLPがありません</div>`; return; }
+  grid.innerHTML = list.map((d, i) => `
+    <article class="card${CLOSED.includes(d.status) ? " closed" : ""}">
+      <a class="ph" href="${esc(d.url)}" target="_blank" rel="noopener">${d.thumb ? `<img src="${esc(d.thumb)}" alt="" loading="lazy">` : ""}<span class="st">${esc(d.status)}</span></a>
+      <div class="body">
+        <p class="nm">${esc(d.name)}</p>
+        <div class="meta">${esc(d.area)}｜${esc(d.madori)}｜作成 ${esc(d.date)}</div>
+        <div class="rent">${esc(d.rent_s)}</div>
+        <div class="btns">
+          <a href="${esc(d.url)}" target="_blank" rel="noopener">LPを開く</a>
+          <button data-copy="${esc(d.url)}">コピー</button>
+          <button data-qr="${i}">QR</button>
+        </div>
+        <div class="qr" id="qr${i}" data-url="${esc(d.url)}"></div>
+      </div>
+    </article>`).join("");
+}
+document.getElementById("grid").addEventListener("click", async e => {
+  const c = e.target.closest("[data-copy]");
+  if (c) {
+    try { await navigator.clipboard.writeText(c.dataset.copy); } catch (err) {
+      const t = document.createElement("textarea"); t.value = c.dataset.copy; document.body.appendChild(t); t.select(); document.execCommand("copy"); t.remove();
+    }
+    const toast = document.getElementById("toast"); toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 1400);
+    return;
+  }
+  const q = e.target.closest("[data-qr]");
+  if (q) {
+    const box = document.getElementById("qr" + q.dataset.qr);
+    if (!box.dataset.done && window.QRCode) { new QRCode(box, {text: box.dataset.url, width: 160, height: 160}); box.dataset.done = 1; }
+    box.classList.toggle("show");
+  }
+});
+const qEl = document.getElementById("q"), sEl = document.getElementById("sort"), oEl = document.getElementById("openOnly");
+qEl.addEventListener("input", () => { st.q = qEl.value; render(); });
+mSel.addEventListener("change", () => { st.madori = mSel.value; render(); save(); });
+sEl.addEventListener("change", () => { st.sort = sEl.value; render(); save(); });
+oEl.addEventListener("change", () => { st.openOnly = oEl.checked; render(); save(); });
+if (!areas.includes(st.area)) st.area = "";
+if (!madoris.includes(st.madori)) st.madori = "";
+mSel.value = st.madori; sEl.value = st.sort; oEl.checked = st.openOnly;
+drawAreas(); render();
+</script>
+</body>
+</html>
