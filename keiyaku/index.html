@@ -336,7 +336,16 @@ async function makeZip() {
 }
 
 // ===== 画面 =====
-$("loginBtn").onclick = () => pca.loginRedirect({ scopes: SCOPES });
+$("loginBtn").onclick = async () => {
+  try { await pca.loginRedirect({ scopes: SCOPES }); }
+  catch (e) {
+    if (!String(e.errorCode || e).includes("interaction_in_progress")) throw e;
+    // 前回のログインが途中で止まった時の目印を消してやり直す
+    for (const st of [sessionStorage, localStorage])
+      Object.keys(st).filter(k => k.includes("interaction.status")).forEach(k => st.removeItem(k));
+    await pca.loginRedirect({ scopes: SCOPES });
+  }
+};
 $("searchBtn").onclick = () => {
   const q = $("q").value.trim(); if (!q) return;
   const r = search(q); $("cands").innerHTML = r.length ? "" : "<p class='none'>見つかりません。別の書き方で試してください。</p>";
