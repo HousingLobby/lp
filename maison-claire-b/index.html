@@ -338,6 +338,12 @@
     .header-cta{font-size:12px;padding:9px 14px;}
     .hero-photo{border-width:6px;border-radius:22px 22px 0 0;}
   }
+  .area-map{margin:0 0 26px;}
+  .area-map img{width:100%;height:auto;border-radius:20px;box-shadow:var(--shadow);}
+  .area-map-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:14px;}
+  .map-btn{display:inline-block;padding:10px 22px;border-radius:999px;background:var(--yellow);color:var(--ink);font-weight:800;font-size:14px;text-decoration:none;border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);}
+  .map-btn:hover{transform:translateY(2px);box-shadow:0 2px 0 var(--ink);}
+  .area-map-foot small{font-size:11px;color:var(--brown);line-height:1.6;flex:1 1 260px;}
 </style>
 </head>
 <body>
@@ -477,6 +483,7 @@
 <section class="area">
   <div class="wrap">
     <div class="sec-head"><span class="en">Location</span><h2>アクセス</h2></div>
+    <div class="area-map"><picture><source media="(max-width:640px)" srcset="images/map_sp.svg"><img src="images/map.svg" alt="メゾンクレールＢの周辺マップ" width="1000" height="680"></picture><div class="area-map-foot"><a class="map-btn" href="https://www.google.com/maps/search/?api=1&amp;query=32.9011149,129.9749884" target="_blank" rel="noopener">Googleマップで開く</a><small>地図：国土地理院ベクトルタイル・国土数値情報（行政区域）を加工して作成。点線は位置関係のイメージで、徒歩時間は実際の道のりの目安です。</small></div></div>
     <div class="area-list">
 <div class="area-item"><span class="name">JR大村線「岩松」駅<small>JR</small></span><span class="dist">徒歩22分</span></div>
 <div class="area-item"><span class="name">ファミリーマート 大村久原店<small>コンビニ</small></span><span class="dist">徒歩11分・850m</span></div>
