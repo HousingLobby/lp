@@ -385,6 +385,15 @@
   .c-badges li{font-size:12px;font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:1px 10px;}
   .c-btn{margin-top:auto;display:flex;justify-content:center;align-items:center;gap:8px;background:var(--yellow);color:var(--ink);text-decoration:none;font-weight:900;font-size:16px;border:3px solid var(--ink);border-radius:14px;padding:12px;box-shadow:0 4px 0 var(--ink);}
   .c-btn:hover{transform:translateY(2px);box-shadow:0 2px 0 var(--ink);}
+  .deal-note{text-align:right;font-size:12.5px;font-weight:700;color:var(--brown);margin:-10px 0 16px;}
+  .deal-note b{color:var(--ink);}
+  .company{background:var(--cream);padding:40px 0 44px;}
+  .company-box{max-width:640px;margin:0 auto;background:#fff;border:3px solid var(--ink);border-radius:18px;padding:6px 26px;box-shadow:0 5px 0 var(--ink);}
+  .company-box div{display:grid;grid-template-columns:7.5em 1fr;gap:12px;padding:12px 0;border-bottom:2px dashed var(--line);font-size:14.5px;}
+  .company-box div:last-child{border-bottom:none;}
+  .company-box dt{font-weight:800;color:var(--brown);}
+  .company-box dd{font-weight:800;}
+  @media(max-width:520px){.deal-note{text-align:left;margin-top:-14px;}.company-box{padding:4px 18px;}.company-box div{grid-template-columns:6.5em 1fr;font-size:13.5px;}}
   .empty{text-align:center;font-weight:700;padding:40px 0;display:none;}
 </style>
 </head>
@@ -406,6 +415,7 @@
 </nav>
 <section class="list">
   <div class="wrap">
+    <p class="deal-note">掲載物件の取引態様：<b>媒介</b>（株式会社ハウジングロビーL&amp;P）</p>
     <div class="grid">
 <article class="card" data-d="長崎中央" data-m="2room">
   <a class="c-img" href="../grace-tanoura/"><img src="images/grace-tanoura.jpg" alt="グレイス田ノ浦の外観" loading="lazy" width="720" height="540"><span class="c-dist">長崎中央</span></a>
@@ -666,6 +676,15 @@
     <ul class="cta-features"><li>来店不要・ひとりでOK</li><li>最短7日で入居</li><li>ネット契約対応</li><li>タクシー無料送迎つき</li></ul>
     <a class="cta-btn" href="https://katteni-naiken.jp/" target="_blank" rel="noopener"><small>SELF-VIEWING SERVICE</small>かってに内見で見に行く →</a>
     <p class="cta-sub">お電話でのご相談も歓迎です<br><a href="tel:0958935056">095-893-5056</a><br>株式会社ハウジングロビーL&amp;P</p>
+  </div>
+</section>
+<section class="company">
+  <div class="wrap">
+    <dl class="company-box">
+      <div><dt>会社名</dt><dd>株式会社ハウジングロビーL&amp;P</dd></div>
+      <div><dt>免許証番号</dt><dd>長崎県知事 (2) 第4111号</dd></div>
+      <div><dt>取引態様</dt><dd>媒介</dd></div>
+    </dl>
   </div>
 </section>
 <footer>
