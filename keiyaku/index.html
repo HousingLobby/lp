@@ -74,6 +74,16 @@ const AREA_ROOTS = ["長崎エリア", "県央エリア／物件台帳"];
 const PARKING_DIRS = ["長崎エリア/駐車場図面", "General/駐車場図面"];   // 物件名一致で 01 に採用
 const GOMI_DIRS = ["General/ゴミステーション"];                           // 物件名一致で 05 に採用
 const MASTER_PATH = "General/契約書類集め/物件マスタ.json";      // かな読み（任意）
+// 市町の公式ハザードマップ一覧（国交省「わがまちハザードマップ」＝各市町の最新版ページへのリンク集）
+const CITY_CODE = { "長崎市": "42201", "佐世保市": "42202", "島原市": "42203", "諫早市": "42204", "大村市": "42205",
+  "西海市": "42212", "雲仙市": "42213", "南島原市": "42214", "長与町": "42307", "時津町": "42308", "東彼杵町": "42321", "川棚町": "42322", "波佐見町": "42323" };
+const OLD_YEARS = 2;   // これより古いハザードマップは「要確認」
+function officialMap(addr) {
+  const c = Object.keys(CITY_CODE).find(k => (addr || "").includes(k));
+  return c ? { city: c, url: `https://disaportal.gsi.go.jp/hazardmap/index.html?citycode=${CITY_CODE[c]}` } : null;
+}
+const ymd = d => d ? new Date(d).toLocaleDateString("ja-JP") : "不明";
+const isOld = d => d && (Date.now() - new Date(d)) / 31557600000 > OLD_YEARS;
 const SKIP = ["過去", "旧", "解約"];
 const CATS = {
   "01_駐車場区画図": ["駐車場", "区画", "駐車位置"],
@@ -184,7 +194,7 @@ async function walk(id, prefix, out) {
   for (const it of await children(id)) {
     if (SKIP.some(k => it.name.includes(k))) continue;
     if (it.folder) await walk(it.id, prefix + it.name + "/", out);
-    else out.push({ name: it.name, url: it["@microsoft.graph.downloadUrl"], id: it.id, inDir: true });
+    else out.push({ name: it.name, url: it["@microsoft.graph.downloadUrl"], id: it.id, inDir: true, mod: it.lastModifiedDateTime });
   }
   return out;
 }
@@ -223,7 +233,20 @@ async function collect(prop) {
   $("status").textContent = "住所を読み取り中…";
   $("addr").value = await findAddress(files) || "";
   $("addr").placeholder = "住所が見つかりません。入力すると防災マップを作ります";
+  showHazardInfo();
+  $("addr").oninput = showHazardInfo;
   $("status").textContent = ""; $("zipBtn").disabled = false;
+}
+
+function showHazardInfo() {
+  let box = $("hazInfo");
+  if (!box) { box = document.createElement("div"); box.id = "hazInfo"; box.style.cssText = "font-size:14px;margin:8px 0 12px"; $("result").after(box); }
+  const hz = current.files["03_ハザードマップ"] || [];
+  const om = officialMap($("addr").value);
+  box.innerHTML = "<b>ハザードマップの日付</b>（物件フォルダ内・ファイル更新日）<br>" +
+    (hz.length ? hz.map(f => `・${f.name}：${ymd(f.mod)}${isOld(f.mod) ? ` <span class="none">⚠ ${OLD_YEARS}年以上前。最新版か確認</span>` : ""}`).join("<br>") : "・なし") +
+    "<br><b>市の公式ハザードマップ（最新版）</b>：" +
+    (om ? `<a href="${om.url}" target="_blank" rel="noopener">${om.city}の一覧を開く</a>（洪水・内水・高潮など）` : "住所から市町を判定できません");
 }
 
 // ===== 住所の読み取り =====
@@ -339,6 +362,16 @@ async function makeZip() {
       d.file("重ねるハザードマップ（ブラウザで開く）.url", `[InternetShortcut]\r\nURL=${h.url}\r\n`);
     } else log("防災マップ：住所が見つかりませんでした");
   }
+  const om = officialMap(addr), hz = files["03_ハザードマップ"];
+  const hzDir = root.folder("03_ハザードマップ");
+  if (om) hzDir.file(`${om.city}の公式ハザードマップ（最新版はこちら）.url`, `[InternetShortcut]\r\nURL=${om.url}\r\n`);
+  hzDir.file("ハザードマップ確認.txt", [
+    "■物件フォルダ内のハザードマップ（ファイル更新日）",
+    ...(hz.length ? hz.map(f => `・${f.name}：${ymd(f.mod)}${isOld(f.mod) ? `（${OLD_YEARS}年以上前・最新版か確認）` : ""}`) : ["・なし"]),
+    "", "■市の公式ハザードマップ（重要事項説明はこちらの最新版を使用）",
+    om ? `${om.city}：${om.url}` : "住所から市町を判定できませんでした",
+    "", "※Web防災マップ（国土地理院データ）は参考資料です。重要事項説明の水害ハザードマップには、市町村発行の最新版を使用してください。",
+  ].join("\r\n"));
   root.file("不足書類.txt", missing.map(c => `${c}: なし`).join("\r\n") || "不足なし");
   $("status").textContent = "ZIP作成中…";
   const blob = await zip.generateAsync({ type: "blob" });
