@@ -71,7 +71,8 @@ const CLIENT_ID = "4ef3018f-0269-4e02-b741-a46664c0b0fc";
 const TENANT_ID = "f813919f-03b0-413d-a7c1-c2ff70d09433";
 const SITE = "hmao034998.sharepoint.com:/sites/msteams_c2a489";   // 物件台帳
 const AREA_ROOTS = ["長崎エリア", "県央エリア／物件台帳"];
-const PARKING_DIR = "長崎エリア/駐車場図面";
+const PARKING_DIRS = ["長崎エリア/駐車場図面", "General/駐車場図面"];   // 物件名一致で 01 に採用
+const GOMI_DIRS = ["General/ゴミステーション"];                           // 物件名一致で 05 に採用
 const MASTER_PATH = "General/契約書類集め/物件マスタ.json";      // かな読み（任意）
 const SKIP = ["過去", "旧", "解約"];
 const CATS = {
@@ -132,7 +133,7 @@ async function children(idOrPath) {
 // ===== 物件フォルダ一覧（1日キャッシュ） =====
 let props = [], master = [];
 async function loadProps() {
-  const c = JSON.parse(localStorage.getItem("keiyaku_props") || "null");
+  const c = JSON.parse(localStorage.getItem("keiyaku_props_v2") || "null");
   if (c && Date.now() - c.t < 864e5) { props = c.v; return; }
   log("物件フォルダ一覧を作成中（初回のみ1〜2分）…");
   const found = [];
@@ -146,13 +147,13 @@ async function loadProps() {
         if (SKIP.some(k => it.name.includes(k))) continue;
         const m = it.name.match(/【(\d+)】|[（(](\d{3,6})[)）]/);
         found.push({ id: it.id, name: it.name, path, no: m ? (m[1] || m[2]) : "" });
-        if (d.depth < 4) next.push({ path, depth: d.depth + 1 });
+        if (d.depth < 4 && !m) next.push({ path, depth: d.depth + 1 });  // 物件フォルダの中は候補にしない
       }
     }));
     level = next;
   }
   props = found;
-  try { localStorage.setItem("keiyaku_props", JSON.stringify({ t: Date.now(), v: props })); } catch {}
+  try { localStorage.setItem("keiyaku_props_v2", JSON.stringify({ t: Date.now(), v: props })); } catch {}
   log(`物件フォルダ ${props.length} 件を読み込みました`);
 }
 async function loadMaster() {
@@ -165,7 +166,11 @@ async function loadMaster() {
 function search(q) {
   const n = norm(q);
   const kanaHits = master.filter(m => m.カナ && (sim(n, norm(m.カナ)) > .5 || norm(m.カナ).includes(n))).map(m => m.物件No);
-  return props.map(p => {
+  const strip = s => norm(s.replace(/【\d+】|[（(]\d+[)）]/g, ""));
+  return props.filter(p => {
+    const parent = strip(p.path.split("/").slice(-2, -1)[0] || "");
+    return !(parent.length >= 3 && strip(p.name).includes(parent));
+  }).map(p => {
     const pn = norm(p.name.replace(/【\d+】|[（(]\d+[)）]/g, ""));
     let s = sim(n, pn);
     if (pn.includes(n) || n.includes(pn)) s += .5;
@@ -190,12 +195,19 @@ async function collect(prop) {
   $("propTitle").textContent = prop.name;
   $("result").innerHTML = ""; $("zipBtn").disabled = true; $("addr").value = "";
   $("status").textContent = "書類を検索中…";
-  const files = await walk(prop.id, "", []);
-  const base = norm(prop.name.replace(/【\d+】|[（(]\d+[)）]/g, "")).replace(/(?<=[^a-z0-9])[a-zⅰ-ⅻ0-9]$/, "");
-  const parking = (await children("/" + PARKING_DIR).catch(() => [])).filter(f => f.file && base.length >= 3 && norm(f.name).includes(base))
-    .map(f => ({ name: f.name, url: f["@microsoft.graph.downloadUrl"], inDir: false }));
+  // 同じ物件名・物件Noのフォルダが複数あれば合算（デスクトップ版と同じ）
+  const strip = s => norm(s.replace(/【\d+】|[（(]\d+[)）]/g, ""));
+  const same = props.filter(p => p.id === prop.id || strip(p.name) === strip(prop.name) || (prop.no && p.no === prop.no));
+  const seen = new Set(), files = [];
+  for (const p of same) for (const f of await walk(p.id, "", [])) if (!seen.has(f.id)) { seen.add(f.id); files.push(f); }
+  const base = strip(prop.name).replace(/(?<=[^a-z0-9])[a-zⅰ-ⅻ0-9]$/, "");
+  const fromDirs = async (dirs, cat) => (await Promise.all(dirs.map(d => children("/" + d).catch(() => [])))).flat()
+    .filter(f => f.file && base.length >= 3 && norm(f.name).includes(base))
+    .map(f => ({ name: f.name, url: f["@microsoft.graph.downloadUrl"], id: f.id, inDir: false, cat }));
+  const extra = (await fromDirs(PARKING_DIRS, "01_駐車場区画図")).concat(await fromDirs(GOMI_DIRS, "05_ポイ捨て・ごみステーション"));
   for (const cat of Object.keys(CATS)) current.files[cat] = [];
-  for (const f of files.concat(parking)) {
+  for (const f of extra) current.files[f.cat].push(f);
+  for (const f of files) {
     const fn = nfkc(f.name);
     for (const [cat, kws] of Object.entries(CATS)) {
       if (!cat.startsWith("01") && !f.inDir) continue;
