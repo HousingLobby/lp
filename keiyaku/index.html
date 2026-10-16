@@ -106,7 +106,7 @@ const msalConfig = () => ({
   auth: { clientId: CLIENT_ID, authority: `https://login.microsoftonline.com/${TENANT_ID}`, redirectUri: location.origin + location.pathname },
   cache: { cacheLocation: "localStorage" },
 });
-const SCOPES = ["Files.Read.All", "Sites.Read.All"];
+const SCOPES = ["Sites.Selected"];  // 物件台帳サイトだけ読める権限（管理者が付与済み）
 let account = null, driveId = null;
 
 async function token() {
