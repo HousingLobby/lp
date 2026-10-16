@@ -368,7 +368,7 @@ $("zipBtn").onclick = () => makeZip().catch(e => { log("エラー: " + e.message
   if (!account) return;
   $("loginCard").classList.add("hidden"); $("app").classList.remove("hidden");
   $("who").textContent = "ログイン中：" + account.username;
-  driveId = (await graph(`/sites/${SITE}/drive?$select=id`)).id;
+  driveId = (await graph(`/sites/${SITE}:/drive?$select=id`)).id;  // パス指定の末尾に「:」が必要
   await Promise.all([loadProps(), loadMaster()]);
   log("準備完了。物件名を入れて検索してください。");
 })().catch(e => log("エラー: " + e.message));
